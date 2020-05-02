@@ -1,19 +1,20 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { useFonts } from '@use-expo/font';
+import { AppLoading } from 'expo';
+
+import AppNavigator from './navigation/AppNavigation';
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-    </View>
-  );
-}
+	let [fontsLoaded] = useFonts({
+		'Roboto-Bold': require('./assets/fonts/Roboto-Bold.ttf'),
+		'Roboto-BoldItalic': require('./assets/fonts/Roboto-BoldItalic.ttf'),
+		'Roboto-Italic': require('./assets/fonts/Roboto-Italic.ttf'),
+		'Roboto-Regular': require('./assets/fonts/Roboto-Regular.ttf'),
+	});
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+	if (!fontsLoaded) {
+		return <AppLoading />;
+	} else {
+		return <AppNavigator />;
+	}
+}
