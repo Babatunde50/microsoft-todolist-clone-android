@@ -45,7 +45,7 @@ const TodoListProvider: React.FC = ({ children }) => {
             const todos: any = await fetchTodos();
             const lists: any = await fetchLists();
             setTodos(todos);
-            setLists(lists)
+            setLists(lists.rows._array);
         }
         fetchData();
     }, [])

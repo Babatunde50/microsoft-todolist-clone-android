@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { StyleSheet, Image, View, Text, TextInput } from 'react-native';
+import { StyleSheet, Image, View, SafeAreaView, Text, TextInput, FlatList } from 'react-native';
 import { Entypo, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import TaskListButton from '../components/TaskListButton';
@@ -10,20 +10,31 @@ import { HomeProps } from '../navigation/TodoNavigation';
 
 function HomeScreen({ route, navigation }: HomeProps) {
 	const todosDB = useContext(TodoListContext);
-	const [ groupName, setGroupName] = useState("");
+	const [groupName, setGroupName] = useState('');
 	const [showModal, setShowModal] = useState(false);
 	let disabled = groupName.length < 1 ? true : false;
-	console.log(todosDB.lists)
+	console.log(todosDB.lists, 'LISTS');
 	return (
 		<View style={styles.screen}>
-			<Modal isOpen={showModal}> 
+			<Modal isOpen={showModal}>
 				<Text style={styles.modalTitle}> Create a group </Text>
-				<TextInput value={groupName} onChangeText={text => setGroupName(text)} placeholder="Name this group" placeholderTextColor="#ccc"  style={styles.modalInput} underlineColorAndroid="#313699" />
-				<View style={styles.modalActions}> 
-					<MyButton onPress={() => { setShowModal(false) } }> 
+				<TextInput
+					value={groupName}
+					onChangeText={(text) => setGroupName(text)}
+					placeholder="Name this group"
+					placeholderTextColor="#ccc"
+					style={styles.modalInput}
+					underlineColorAndroid="#313699"
+				/>
+				<View style={styles.modalActions}>
+					<MyButton
+						onPress={() => {
+							setShowModal(false);
+						}}
+					>
 						<Text> CANCEL </Text>
 					</MyButton>
-					<MyButton disabled={disabled} style={{opacity: disabled ? .2 : 1}} > 
+					<MyButton disabled={disabled} style={{ opacity: disabled ? 0.2 : 1 }}>
 						<Text> CREATE GROUP </Text>
 					</MyButton>
 				</View>
@@ -76,20 +87,50 @@ function HomeScreen({ route, navigation }: HomeProps) {
 				/>
 			</View>
 			<View style={styles.tasksList}>
-				<View style={styles.list}></View>
+				<View style={styles.list}>
+					<FlatList
+						data={todosDB.lists}
+						renderItem={({ item }) => (
+							<TaskListButton
+								title={item.title}
+								iconName="menu"
+								iconSize={15}
+								iconColor={item.color}
+								onPress={() => {
+									navigation.navigate('NewList', { listName: item.title, newList: false})
+								}}
+							/>
+						)}
+						keyExtractor={(item) => item.id}
+					/>
+				</View>
 				<View style={styles.listAction}>
 					<View style={styles.addNewList}>
 						<AntDesign name="plus" size={25} color="#313699" />
-						<Text style={styles.addNewListText} onPress={() => { navigation.navigate("NewList", { listName: "Untitled List", newList: true }) }} >New list</Text>
+						<Text
+							style={styles.addNewListText}
+							onPress={() => {
+								navigation.navigate('NewList', { listName: 'Untitled List', newList: true });
+							}}
+						>
+							New list
+						</Text>
 					</View>
-					<View style={styles.addNewGroup} >
-						<MaterialCommunityIcons name="shape-rectangle-plus" size={25} color="#313699" onPress={() => {setShowModal(true)}} />
+					<View style={styles.addNewGroup}>
+						<MaterialCommunityIcons
+							name="shape-rectangle-plus"
+							size={25}
+							color="#313699"
+							onPress={() => {
+								setShowModal(true);
+							}}
+						/>
 					</View>
 				</View>
 			</View>
 		</View>
 	);
-};
+}
 
 const styles = StyleSheet.create({
 	screen: {
@@ -98,14 +139,19 @@ const styles = StyleSheet.create({
 		backgroundColor: 'white',
 	},
 	tasksListLinks: {
-		height: '50%',
+		height: '45%',
 		paddingVertical: 12,
 	},
 	tasksList: {
-		height: '50%',
+		height: '55%',
 		justifyContent: 'space-between',
+		paddingTop: 15,
+		borderTopWidth: 1,
+		borderTopColor: '#ccc',
 	},
-	list: {},
+	list: {
+		height: '80%',
+	},
 	listAction: {
 		flexDirection: 'row',
 		alignItems: 'center',
@@ -121,6 +167,7 @@ const styles = StyleSheet.create({
 		color: '#313699',
 		fontFamily: 'Roboto-Regular',
 		fontSize: 18,
+		marginLeft: 10
 	},
 	addNewGroup: {
 		padding: 5,
@@ -145,18 +192,18 @@ const styles = StyleSheet.create({
 	modalTitle: {
 		fontFamily: 'Roboto-Bold',
 		fontSize: 18,
-		paddingBottom: 20
+		paddingBottom: 20,
 	},
 	modalInput: {
 		height: 40,
 		fontSize: 18,
-		paddingLeft: 6
+		paddingLeft: 6,
 	},
 	modalActions: {
 		flexDirection: 'row',
-		justifyContent: "flex-end",
+		justifyContent: 'flex-end',
 		marginTop: 30,
-	}
+	},
 });
 
 export const HomeHeaderTitle: React.FC = () => {

@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
-const FabButton: React.FC = (props) => {
+const FabButton: React.FC<{ style: {}, onPress: () => void, children: React.ReactNode }> = ({ style, onPress, children }) => {
     return (
-        <TouchableOpacity onPress={props.onPress} style={{...styles.button, ...props.style}}>
-            { props.children }
+        <TouchableOpacity onPress={onPress} style={{...styles.button, ...style}}>
+            { children }
         </TouchableOpacity>
     )
 }

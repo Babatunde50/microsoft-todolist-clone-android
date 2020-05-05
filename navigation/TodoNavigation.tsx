@@ -63,7 +63,19 @@ const TodoListNavigator = () => (
 		/>
 		<TodoListStackNavigator.Screen name="Assign" component={AssignedListScreen} />
 		<TodoListStackNavigator.Screen name="Important" component={ImportantListScreen} />
-		<TodoListStackNavigator.Screen name="Myday" component={MyDayListScreen} />
+		<TodoListStackNavigator.Screen name="Myday" component={MyDayListScreen} options={{
+			title: "",
+			headerStyle: {
+				backgroundColor: "rgba(0,0,0,.5)",
+				elevation: 0,
+			},
+			headerTintColor: '#fff',
+			headerRight: () => (
+				<View style={{padding: 10}}>
+					<MaterialCommunityIcons name="dots-vertical" size={25} color="white" />
+				</View>
+			)
+		}} />
 		<TodoListStackNavigator.Screen name="Planned" component={PlannedListScreen} />
 		<TodoListStackNavigator.Screen name="Tasks" component={TasksListScreen} />
 		<TodoListStackNavigator.Screen name="NewList" component={NewListScreen} options={{
