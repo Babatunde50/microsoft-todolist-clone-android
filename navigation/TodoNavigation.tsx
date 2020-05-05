@@ -1,7 +1,8 @@
 import React from 'react';
 import { View } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, StackNavigationProp  } from '@react-navigation/stack';
 import { Octicons, MaterialCommunityIcons, AntDesign } from '@expo/vector-icons';
+import { RouteProp } from '@react-navigation/native';
 
 import AssignedListScreen from '../screens/Assigned/AssignedListScreen';
 import ImportantListScreen from '../screens/Important/ImportantListScreen';
@@ -11,7 +12,36 @@ import TasksListScreen from '../screens/Tasks/TasksListScreen';
 import HomeScreen, { HomeHeaderTitle } from '../screens/HomeScreen';
 import NewListScreen from '../screens/NewList/NewListScreen'
 
-const TodoListStackNavigator = createStackNavigator();
+type RootStackParamList = {
+	Home: undefined;
+	Assign: undefined;
+	Important: undefined;
+	Myday: undefined;
+	Planned: undefined;
+	Tasks: undefined;
+	NewList: {listName: string, newList: boolean }
+  };
+
+type HomeScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Home'
+>;
+type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>
+
+export type HomeProps = {
+  navigation: HomeScreenNavigationProp;
+  route: HomeScreenRouteProp;
+};
+
+type NewListScreenNavigationProp = StackNavigationProp<RootStackParamList, 'NewList'>;
+type NewListScreenRouteProp = RouteProp<RootStackParamList, 'NewList'>;
+
+export type NewListProp = {
+	navigation: NewListScreenNavigationProp,
+	route: NewListScreenRouteProp
+}
+
+const TodoListStackNavigator = createStackNavigator<RootStackParamList>();
 
 const TodoListNavigator = () => (
 	<TodoListStackNavigator.Navigator>

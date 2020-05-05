@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const MyButton: React.FC = (props) => {
+const MyButton: React.FC<{ disabled?: boolean, onPress?: () => void, style?: {}, children: React.ReactNode  }> = ( { disabled, onPress, style, children} ) => {
     return (
-        <TouchableOpacity disabled={props.disabled} onPress={props.onPress} style={{...styles.button, ...props.style}}>
-            { props.children}
+        <TouchableOpacity disabled={disabled} onPress={onPress} style={{...styles.button, ...style}}>
+            { children}
         </TouchableOpacity>
     )
 }

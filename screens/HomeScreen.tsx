@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
-import { StyleSheet, Image, View, Text, TextInput, Button } from 'react-native';
+import React, { useState, useContext } from 'react';
+import { StyleSheet, Image, View, Text, TextInput } from 'react-native';
 import { Entypo, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import TaskListButton from '../components/TaskListButton';
 import Modal from '../components/Modal';
 import MyButton from '../components/MyButton';
+import { TodoListContext } from '../providers/TodoList';
+import { HomeProps } from '../navigation/TodoNavigation';
 
-
-const HomeScreen: React.FC<{ navigation: { navigate: (arg: string) => void } }> = ({ navigation }) => {
+function HomeScreen({ route, navigation }: HomeProps) {
+	const todosDB = useContext(TodoListContext);
 	const [ groupName, setGroupName] = useState("");
 	const [showModal, setShowModal] = useState(false);
 	let disabled = groupName.length < 1 ? true : false;
+	console.log(todosDB.lists)
 	return (
 		<View style={styles.screen}>
 			<Modal isOpen={showModal}> 

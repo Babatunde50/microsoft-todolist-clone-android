@@ -3,6 +3,15 @@ import { useFonts } from '@use-expo/font';
 import { AppLoading } from 'expo';
 
 import AppNavigator from './navigation/AppNavigation';
+import TodoListProvider from './providers/TodoList'
+import { init } from './utils/db';
+
+init().then(() => {
+	console.log('Initialized database');
+  }).catch(err => {
+	console.log('Initializing db failed.')
+	console.log(err);
+  })
 
 export default function App() {
 	let [fontsLoaded] = useFonts({
@@ -15,6 +24,10 @@ export default function App() {
 	if (!fontsLoaded) {
 		return <AppLoading />;
 	} else {
-		return <AppNavigator />;
+		return (
+			<TodoListProvider>
+				<AppNavigator />
+			</TodoListProvider>
+		);
 	}
 }

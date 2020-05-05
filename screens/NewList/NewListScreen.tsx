@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, StyleSheet, TextInput } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import { ColorPicker } from 'react-native-status-color-picker';
@@ -7,15 +7,18 @@ import Modal from '../../components/Modal';
 import MyButton from '../../components/MyButton';
 import Colors from '../../utils/colors';
 import FabButton from '../../components/FabButton';
+import { NewListProp } from '../../navigation/TodoNavigation';
+import { TodoListContext } from '../../providers/TodoList'
 
-const NewListScreen: React.FC = (props) => {
-    const { listName, newList } = props.route.params;
+function NewListScreen({ route, navigation }: NewListProp) {
+    const todoDB = useContext(TodoListContext);
+    const { listName, newList } = route.params;
     const [ groupName, setGroupName] = useState("");
     const [title, setTitle] = useState(listName);
     const [showModal, setShowModal] = useState(newList);
     const [selectedColor, setSelectedColor] = useState('#F44336')
     
-	let disabled = groupName.length < 1 ? true : false;
+    let disabled = groupName.length < 1 ? true : false;
 	return (
 		<View style={{flex: 1, backgroundColor: selectedColor}}>
             <Modal isOpen={showModal}> 
@@ -36,9 +39,9 @@ const NewListScreen: React.FC = (props) => {
                     <ColorPicker
                         colors={Colors}
                         selectedColor={selectedColor}
-                        onSelect={(color) => { 
+                        onSelect={(color: string) => { 
                             setSelectedColor(color);
-                            props.navigation.setOptions({
+                            navigation.setOptions({
                                 headerStyle: {
                                     backgroundColor: color,
                                     elevation: 0
@@ -49,12 +52,13 @@ const NewListScreen: React.FC = (props) => {
                 </View>
 				<View style={styles.modalActions}> 
 					<MyButton onPress={() => { 
-                        props.navigation.goBack();
+                        navigation.goBack();
                         setShowModal(false)
                          } }> 
 						<Text> CANCEL </Text>
 					</MyButton>
 					<MyButton onPress={() => {
+                        todoDB.addList(groupName, selectedColor)
                         setShowModal(false);
                         setTitle(groupName)
                     }}  disabled={disabled} style={{opacity: disabled ? .2 : 1}} > 
