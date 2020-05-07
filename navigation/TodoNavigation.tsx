@@ -64,15 +64,13 @@ const TodoListNavigator = () => (
 		<TodoListStackNavigator.Screen name="Assign" component={AssignedListScreen} />
 		<TodoListStackNavigator.Screen name="Important" component={ImportantListScreen} />
 		<TodoListStackNavigator.Screen name="Myday" component={MyDayListScreen} options={{
-			title: "",
+			title: "TundeJS",
 			headerStyle: {
-				backgroundColor: "rgba(0,0,0,.5)",
-				elevation: 0,
+				elevation: 1,
 			},
-			headerTintColor: '#fff',
 			headerRight: () => (
 				<View style={{padding: 10}}>
-					<MaterialCommunityIcons name="dots-vertical" size={25} color="white" />
+					<MaterialCommunityIcons name="dots-vertical" size={25} color="#000" />
 				</View>
 			)
 		}} />

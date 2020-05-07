@@ -1,16 +1,61 @@
-import React from 'react';
-import { View, Text, StyleSheet, ImageBackground } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ImageBackground, TouchableWithoutFeedback } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 
 import FabButton from '../../components/FabButton';
 import AddTask from '../../components/AddTask';
+import DueDate from '../../components/TimeTask';
+import { dueDateActions , remindMeActions, repeatActions } from '../../utils/days';
 
 const MyDayScreen: React.FC = () => {
+	const [ task, setTask ] = useState("");
+	const [showAddTask, setShowAddTask] = useState(false);
+	const [showDueDate, setShowDueDate] = useState(false);
+	const [showReminder, setShowReminder] = useState(false);
+	const [showRepeat, setShowRepeat] = useState(false);
 	const todayDate = new Date().toString().split(' ')
+	const taskInputHandler = (text: string) => {
+		setTask(text);
+	}
+	const addNewTask = () => {
+		console.log("Submit")
+	}
+	const dueDateShow = () => {
+		if(showReminder || showDueDate) {
+			cancelAllShows();
+			return;
+		}
+		setShowDueDate(true);
+	}
+	const reminderShow = () => {
+		if(showDueDate || showRepeat) {
+			cancelAllShows();
+			return;
+		}
+		setShowReminder(true);
+	}
+	const repeatShow = () => {
+		if(showDueDate || showReminder) {
+			cancelAllShows();
+			return;
+		}
+		setShowRepeat(true);
+	}
+	const cancelAllShows = () => {
+		if(!showDueDate && !showReminder && !showRepeat) {
+			setShowAddTask(false);
+		}
+		setShowDueDate(false);
+		setShowReminder(false);
+		setShowRepeat(false);
+	}
+	const addTaskShow = () => {
+		setShowAddTask(true)
+	}
 	return (
-		<View style={styles.screen}>
+		<TouchableWithoutFeedback style={styles.screen} onPress={cancelAllShows}>
 			<ImageBackground 
-				source={require('../../assets/images/myday2.webp')} 
+				source={require('../../assets/images/myday.webp')} 
 				style={styles.image}>
 				<Text style={styles.myDayText}> My Day</Text>
 				<Text style={styles.dateText} > {`${todayDate[0]}, ${todayDate[1]} ${todayDate[2]}`} </Text>
@@ -18,12 +63,23 @@ const MyDayScreen: React.FC = () => {
 					<Entypo name="light-up" size={15} color="white" />
 					<Text style={styles.todayText}> Today </Text>
 				</View>
-				<FabButton style={{backgroundColor: "#2288fa"}} onPress={() => {}}>  
+				<FabButton style={{backgroundColor: "#376e69"}} onPress={addTaskShow}>  
                 	<Entypo name="plus" size={32} color="white" />
             	</FabButton>
-				<AddTask />
+				<DueDate show={showDueDate} actions={dueDateActions(new Date().getDay())} />
+				<DueDate show={showReminder} actions={remindMeActions(new Date().getDay())} />
+				<DueDate show={showRepeat} actions={repeatActions(new Date().getDay())} />
+				<AddTask 
+					show={showAddTask}
+					task={task} 
+					taskInputHandler={taskInputHandler} 
+					submitTaskHandler={addNewTask} 
+					showDueDateHandler={dueDateShow}
+					showReminderHandler={reminderShow}
+					showRepeatHandler={repeatShow}
+				/>
 			</ImageBackground>
-		</View>
+		</TouchableWithoutFeedback>
 	);
 };
 
@@ -54,13 +110,13 @@ const styles = StyleSheet.create({
 	todayCard: {
 		flexDirection: 'row',
 		width: 100,
-		backgroundColor: "#2288fa",
+		backgroundColor: "#376e69",
 		justifyContent: "center",
 		alignItems: "center",
 		borderRadius: 25,
 		padding: 5,
 		position: "absolute",
-		bottom: 20,
+		bottom: 10,
 		margin: 16,
 		left: '30%'
 	},
