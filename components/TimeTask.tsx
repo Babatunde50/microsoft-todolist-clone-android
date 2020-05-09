@@ -1,21 +1,52 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Platform } from 'react-native';
 
-import TodoDatesActions from './todoDatesActions';
+import  DateTimePicker  from '@react-native-community/datetimepicker'
+
+import TodoDatesActions from './TodoDatesActions';
 import TaskListButton from './TaskListButton';
 
 type args = {
 	show: boolean,
-	actions: {icon: string, date: string}[]
+	actions: {icon: string, date: string, id?: number}[],
+	getDateHandler: (date: Date) => void,
+	close: () => void
 }
 
-const TimeTask: React.FC<args> = ({ show, actions }) => {
-    const num = new Date().getDay();
+const TimeTask: React.FC<args> = ({ show, actions, getDateHandler, close }) => {
+	const num = new Date().getDay();
+	const [date, setDate] = useState(new Date());
+	// const [mode, setMode] = useState('date');
+	const [showDatePicker, setShowDatePicker ] = useState(false);
+
+	const changeDateHandler = (event: Event, selectedDate: Date) => {
+		const currentDate = selectedDate || date;
+		if(event.type === "dismissed") {
+			setShowDatePicker(false);
+			return;
+		}
+		setShowDatePicker(Platform.OS === 'ios');
+		setDate(currentDate);
+		getDateHandler(currentDate);
+		close();
+	  };
+
     if(!show) {
         return null;
     }
     return (
-        <TodoDatesActions>
+		<>
+		{showDatePicker && (
+			<DateTimePicker
+				testID="dateTimePicker"
+				value={date}
+				mode="date"
+				minimumDate={new Date()}
+				display="default"
+				onChange={changeDateHandler}
+				/>
+      )}
+        <TodoDatesActions style={styles.actionsList}>
 			{
 				actions.map(action => (
 					<TaskListButton
@@ -25,17 +56,28 @@ const TimeTask: React.FC<args> = ({ show, actions }) => {
 					iconSize={15}
 					iconColor="#ccc"
 					onPress={() => {
-                        console.log("Pressed")
+						if(action.date === 'Pick a date') {
+							setShowDatePicker(true)
+						} else {
+							let day = new Date();
+							day.setDate(day.getDate() + action!.id! || 0 )
+							getDateHandler(new Date(day));
+							close();
+							// close();
+						}
 					}}
 				/>
 				))
 			}
         </TodoDatesActions>
+		</>
     )
 }
 
 const styles = StyleSheet.create({
-
+	actionsList: {
+		alignItems: 'flex-start'
+	}
 })
 
 export default TimeTask;

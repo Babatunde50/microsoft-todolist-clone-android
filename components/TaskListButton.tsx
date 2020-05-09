@@ -24,7 +24,8 @@ const styles = StyleSheet.create({
 		backgroundColor: 'white',
 		paddingVertical: 12,
         marginBottom: 8,
-        flexDirection: 'row',
+		flexDirection: 'row',
+		justifyContent: 'flex-start',
         alignItems: 'center'
     },
 	buttonText: {

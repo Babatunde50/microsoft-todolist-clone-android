@@ -4,54 +4,30 @@ import { Entypo } from '@expo/vector-icons';
 
 import FabButton from '../../components/FabButton';
 import AddTask from '../../components/AddTask';
-import DueDate from '../../components/TimeTask';
+import TimeTask from '../../components/TimeTask';
 import { dueDateActions , remindMeActions, repeatActions } from '../../utils/days';
 
+import useAddTodo from '../../hooks/useAddTodo'
+
 const MyDayScreen: React.FC = () => {
-	const [ task, setTask ] = useState("");
-	const [showAddTask, setShowAddTask] = useState(false);
-	const [showDueDate, setShowDueDate] = useState(false);
-	const [showReminder, setShowReminder] = useState(false);
-	const [showRepeat, setShowRepeat] = useState(false);
+	const {
+		task,
+		showAddTask,
+		showDueDate,
+		showReminder,
+		taskInputHandler,
+		addNewTask,
+		dueDate,
+		closeDueDateHandler,
+		addTaskShow,
+		cancelAllShows,
+		repeatShow,
+		reminderShow,
+		dueDateShow,
+		showRepeat
+	} = useAddTodo();
 	const todayDate = new Date().toString().split(' ')
-	const taskInputHandler = (text: string) => {
-		setTask(text);
-	}
-	const addNewTask = () => {
-		console.log("Submit")
-	}
-	const dueDateShow = () => {
-		if(showReminder || showDueDate) {
-			cancelAllShows();
-			return;
-		}
-		setShowDueDate(true);
-	}
-	const reminderShow = () => {
-		if(showDueDate || showRepeat) {
-			cancelAllShows();
-			return;
-		}
-		setShowReminder(true);
-	}
-	const repeatShow = () => {
-		if(showDueDate || showReminder) {
-			cancelAllShows();
-			return;
-		}
-		setShowRepeat(true);
-	}
-	const cancelAllShows = () => {
-		if(!showDueDate && !showReminder && !showRepeat) {
-			setShowAddTask(false);
-		}
-		setShowDueDate(false);
-		setShowReminder(false);
-		setShowRepeat(false);
-	}
-	const addTaskShow = () => {
-		setShowAddTask(true)
-	}
+	
 	return (
 		<TouchableWithoutFeedback style={styles.screen} onPress={cancelAllShows}>
 			<ImageBackground 
@@ -66,9 +42,9 @@ const MyDayScreen: React.FC = () => {
 				<FabButton style={{backgroundColor: "#376e69"}} onPress={addTaskShow}>  
                 	<Entypo name="plus" size={32} color="white" />
             	</FabButton>
-				<DueDate show={showDueDate} actions={dueDateActions(new Date().getDay())} />
-				<DueDate show={showReminder} actions={remindMeActions(new Date().getDay())} />
-				<DueDate show={showRepeat} actions={repeatActions(new Date().getDay())} />
+				<TimeTask show={showDueDate} close={() => { closeDueDateHandler()  }}  getDateHandler={dueDate} actions={dueDateActions(new Date().getDay())} />
+				{/* <TimeTask show={showReminder} close={closeDueDateHandler} getDateHandler={dueDate} actions={remindMeActions(new Date().getDay())} />
+				<TimeTask show={showRepeat} close={closeDueDateHandler} getDateHandler={dueDate} actions={repeatActions(new Date().getDay())} /> */}
 				<AddTask 
 					show={showAddTask}
 					task={task} 

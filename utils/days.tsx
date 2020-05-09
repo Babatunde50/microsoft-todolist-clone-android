@@ -23,15 +23,18 @@ export const dueDateActions = (num: number) => {
     return [
         {  
             date: `Today (${getDay(num)})`,
-            icon: 'calendar'
+            icon: 'calendar',
+            id: 0
         },
         {  
             date: `Tomorrow (${getDay(num + 1)})`,
-            icon: 'calendar'
+            icon: 'calendar',
+            id: 1
         },
         {  
             date: `Next week (${getDay(0)})`,
-            icon: 'calendar'
+            icon: 'calendar',
+            id: 6
         },
         {  
             date: "Pick a date",
