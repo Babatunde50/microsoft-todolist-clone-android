@@ -20,6 +20,10 @@ const getDay = (day: number) => {
 };
 
 export const dueDateActions = (num: number) => {
+    let nextDay = num + 1
+    if(num >= 6) {
+        nextDay = 0;
+    }
     return [
         {  
             date: `Today (${getDay(num)})`,
@@ -27,7 +31,7 @@ export const dueDateActions = (num: number) => {
             id: 0
         },
         {  
-            date: `Tomorrow (${getDay(num + 1)})`,
+            date: `Tomorrow (${getDay(nextDay)})`,
             icon: 'calendar',
             id: 1
         },
@@ -64,31 +68,37 @@ export const remindMeActions = (num: number) => {
     ]
 }
 
-export const repeatActions = (num: number) => {
+export const repeatActions = () => {
     return [
         {  
             date: `Daily`,
-            icon: 'figma'
+            icon: 'figma',
+            returnType: 'string'
         },
         {  
             date: `Weekdays`,
-            icon: 'more-horizontal'
+            icon: 'more-horizontal',
+            returnType: 'string'
         },
         {  
             date: `Weekly`,
-            icon: 'more-vertical'
+            icon: 'more-vertical',
+            returnType: 'string'
         },
         {  
             date: "Monthly",
-            icon: 'slack'
+            icon: 'slack',
+            returnType: 'string'
         },
         {  
             date: "Yearly",
-            icon: 'figma'
+            icon: 'figma',
+            returnType: 'string'
         },
         {  
             date: "Custom",
-            icon: 'grid'
+            icon: 'grid',
+            returnType: 'string'
         },
     ]
 }

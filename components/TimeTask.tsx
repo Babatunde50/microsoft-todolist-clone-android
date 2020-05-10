@@ -8,15 +8,14 @@ import TaskListButton from './TaskListButton';
 
 type args = {
 	show: boolean,
-	actions: {icon: string, date: string, id?: number}[],
-	getDateHandler: (date: Date) => void,
+	actions: {icon: string, date: string, id?: number, returnType?: string}[],
+	getDateHandler: (date: Date | string) => void,
 	close: () => void
 }
 
 const TimeTask: React.FC<args> = ({ show, actions, getDateHandler, close }) => {
 	const num = new Date().getDay();
 	const [date, setDate] = useState(new Date());
-	// const [mode, setMode] = useState('date');
 	const [showDatePicker, setShowDatePicker ] = useState(false);
 
 	const changeDateHandler = (event: Event, selectedDate: Date) => {
@@ -51,7 +50,7 @@ const TimeTask: React.FC<args> = ({ show, actions, getDateHandler, close }) => {
 				actions.map(action => (
 					<TaskListButton
 					key={action.date}
-					title={action.date}
+					title={ action.date  }
 					iconName={action.icon}
 					iconSize={15}
 					iconColor="#ccc"
@@ -59,12 +58,17 @@ const TimeTask: React.FC<args> = ({ show, actions, getDateHandler, close }) => {
 						if(action.date === 'Pick a date') {
 							setShowDatePicker(true)
 						} else {
+							if(action.returnType === 'string') {
+								getDateHandler(action.date);
+								close();
+								return
+							}
 							let day = new Date();
 							day.setDate(day.getDate() + action!.id! || 0 )
 							getDateHandler(new Date(day));
 							close();
-							// close();
 						}
+						
 					}}
 				/>
 				))

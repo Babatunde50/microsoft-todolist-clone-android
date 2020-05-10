@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ImageBackground, TouchableWithoutFeedback } from 'react-native';
+import React from 'react';
+import { Text, StyleSheet, ImageBackground, TouchableWithoutFeedback } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 
 import FabButton from '../../components/FabButton';
 import AddTask from '../../components/AddTask';
 import TimeTask from '../../components/TimeTask';
+import SmallCard from '../../components/SmallCard';
 import { dueDateActions , remindMeActions, repeatActions } from '../../utils/days';
 
 import useAddTodo from '../../hooks/useAddTodo'
@@ -17,17 +18,27 @@ const MyDayScreen: React.FC = () => {
 		showReminder,
 		taskInputHandler,
 		addNewTask,
-		dueDate,
+		dueDateHandler,
 		closeDueDateHandler,
 		addTaskShow,
 		cancelAllShows,
 		repeatShow,
 		reminderShow,
 		dueDateShow,
-		showRepeat
+		showRepeat,
+		dueDate,
+		removeDueDate,
+		addReminderDate,
+		removeReminderDate,
+		reminderDate,
+		closeReminderHandler,
+		closeRepeatHandler,
+		addRepeatHandler,
+		removeRepeatHandler,
+		repeatType
 	} = useAddTodo();
 	const todayDate = new Date().toString().split(' ')
-	
+	console.log(task, dueDate, repeatType, reminderDate)
 	return (
 		<TouchableWithoutFeedback style={styles.screen} onPress={cancelAllShows}>
 			<ImageBackground 
@@ -35,19 +46,25 @@ const MyDayScreen: React.FC = () => {
 				style={styles.image}>
 				<Text style={styles.myDayText}> My Day</Text>
 				<Text style={styles.dateText} > {`${todayDate[0]}, ${todayDate[1]} ${todayDate[2]}`} </Text>
-				<View style={styles.todayCard}>
+				<SmallCard>
 					<Entypo name="light-up" size={15} color="white" />
 					<Text style={styles.todayText}> Today </Text>
-				</View>
+				</SmallCard>
 				<FabButton style={{backgroundColor: "#376e69"}} onPress={addTaskShow}>  
                 	<Entypo name="plus" size={32} color="white" />
             	</FabButton>
-				<TimeTask show={showDueDate} close={() => { closeDueDateHandler()  }}  getDateHandler={dueDate} actions={dueDateActions(new Date().getDay())} />
-				{/* <TimeTask show={showReminder} close={closeDueDateHandler} getDateHandler={dueDate} actions={remindMeActions(new Date().getDay())} />
-				<TimeTask show={showRepeat} close={closeDueDateHandler} getDateHandler={dueDate} actions={repeatActions(new Date().getDay())} /> */}
+				<TimeTask show={showDueDate} close={closeDueDateHandler}  getDateHandler={dueDateHandler} actions={dueDateActions(new Date().getDay())} />
+				<TimeTask show={showReminder} close={ closeReminderHandler } getDateHandler={addReminderDate} actions={remindMeActions(new Date().getDay())} />
+				<TimeTask show={showRepeat} close={ closeRepeatHandler } getDateHandler={addRepeatHandler} actions={repeatActions()} />
 				<AddTask 
 					show={showAddTask}
 					task={task} 
+					dueDate={dueDate}
+					reminderDate={reminderDate}
+					repeatType={repeatType}
+					removeDueDate={removeDueDate}
+					removeReminderDate={removeReminderDate}
+					removeRepeatType={removeRepeatHandler}
 					taskInputHandler={taskInputHandler} 
 					submitTaskHandler={addNewTask} 
 					showDueDateHandler={dueDateShow}
@@ -82,19 +99,6 @@ const styles = StyleSheet.create({
 		color: 'white',
 		letterSpacing: 3,
 		paddingHorizontal: 10
-	},
-	todayCard: {
-		flexDirection: 'row',
-		width: 100,
-		backgroundColor: "#376e69",
-		justifyContent: "center",
-		alignItems: "center",
-		borderRadius: 25,
-		padding: 5,
-		position: "absolute",
-		bottom: 10,
-		margin: 16,
-		left: '30%'
 	},
 	todayText: {
 		fontFamily: "Roboto-Bold",
