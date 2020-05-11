@@ -17,7 +17,7 @@ function NewListScreen({ route, navigation }: NewListProp) {
     const [title, setTitle] = useState(listName);
     const [showModal, setShowModal] = useState(newList);
     const [selectedColor, setSelectedColor] = useState('#F44336')
-    
+
     let disabled = groupName.length < 1 ? true : false;
 	return (
 		<View style={{flex: 1, backgroundColor: selectedColor}}>

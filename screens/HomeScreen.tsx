@@ -1,19 +1,18 @@
 import React, { useState, useContext } from 'react';
-import { StyleSheet, Image, View, SafeAreaView, Text, TextInput, FlatList } from 'react-native';
+import { StyleSheet, Image, View, Text, TextInput, FlatList } from 'react-native';
 import { Entypo, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import TaskListButton from '../components/TaskListButton';
 import Modal from '../components/Modal';
 import MyButton from '../components/MyButton';
-import { TodoListContext } from '../providers/TodoList';
+import { TodoListContext, todoContext, list } from '../providers/TodoList';
 import { HomeProps } from '../navigation/TodoNavigation';
 
 function HomeScreen({ route, navigation }: HomeProps) {
-	const todosDB = useContext(TodoListContext);
+	const todosDB = useContext(TodoListContext) as todoContext;
 	const [groupName, setGroupName] = useState('');
 	const [showModal, setShowModal] = useState(false);
 	let disabled = groupName.length < 1 ? true : false;
-	console.log(todosDB.lists, 'LISTS');
 	return (
 		<View style={styles.screen}>
 			<Modal isOpen={showModal}>
@@ -101,7 +100,7 @@ function HomeScreen({ route, navigation }: HomeProps) {
 								}}
 							/>
 						)}
-						keyExtractor={(item) => item.id}
+						keyExtractor={(item: list) => item.id.toString(); }
 					/>
 				</View>
 				<View style={styles.listAction}>

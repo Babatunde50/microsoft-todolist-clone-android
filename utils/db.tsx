@@ -1,15 +1,19 @@
 import * as SQLite from 'expo-sqlite';
+import { SQLResultSet } from 'expo-sqlite';
 
-const db = SQLite.openDatabase('todoList.db');
+const db = SQLite.openDatabase('todosDB.db');
 
 export const init = () => {
 	const promise = new Promise((resolve, reject) => {
-		db.transaction((tx) => {
+		db.transaction((tx: any) => {
 			tx.executeSql(
-				'CREATE TABLE IF NOT EXISTS todos (id INTEGER PRIMARY KEY NOT NULL, title TEXT NOT NULL, type TEXT NOT NULL, dueDate TEXT, reminder TEXT, category TEXT NOT NULL, favourite INT NOT NULL  )',
+				'CREATE TABLE IF NOT EXISTS myTodos (id INTEGER PRIMARY KEY NOT NULL, title TEXT NOT NULL, screen TEXT NOT NULL, important INT NOT NULL, listType TEXT NOT NULL, createdAt TEXT NOT NULL, steps TEXT, reminder DATE, dueDate DATE, repeat INT, note TEXT )',
 				[],
 				() => {
 					resolve();
+				},
+				(tx: any, err: SQLStatementErrorCallback) => {
+					reject(err);
 				}
 			);
 		});
@@ -28,19 +32,23 @@ export const init = () => {
 
 export const addNewTodo = (
 	title: string,
-	type: string,
-	category: string,
-	favourite: boolean,
+	screen: string,
+	important: number,
+	listType: string,
+	reminder: string,
 	dueDate?: string,
-	reminder?: string,
+	repeat?: number
 ) => {
 	const promise = new Promise((resolve, reject) => {
-		db.transaction((tx) => {
+		db.transaction((tx: any) => {
 			tx.executeSql(
-				'INSERT INTO todos (title, type, dueDate, reminder, category, favourite) VALUES (?,?,?,?,?,?)',
-				[title, type, dueDate, reminder, category, +favourite],
-				(_, result) => {
+				'INSERT INTO myTodos (title, screen, important, listType, reminder, dueDate, repeat) VALUES (?,?,?,?,?,?,?)',
+				[title, screen, important, listType, reminder, dueDate, repeat],
+				(_: SQLTransaction, result: SQLResultSet) => {
 					resolve(result);
+				},
+				(tx: any, err: SQLStatementErrorCallback) => {
+					reject(err);
 				}
 			);
 		});
@@ -51,13 +59,9 @@ export const addNewTodo = (
 export const addNewList = (title: string, color: string) => {
 	const promise = new Promise((resolve, reject) => {
 		db.transaction((tx) => {
-			tx.executeSql(
-				'INSERT INTO lists (title, color) VALUES (?,?)',
-				[title, color],
-				(_, result) => {
-					resolve(result);
-				}
-			);
+			tx.executeSql('INSERT INTO lists (title, color) VALUES (?,?)', [title, color], (_, result) => {
+				resolve(result);
+			});
 		});
 	});
 	return promise;
@@ -66,13 +70,9 @@ export const addNewList = (title: string, color: string) => {
 export const fetchTodos = () => {
 	const promise = new Promise((resolve, reject) => {
 		db.transaction((tx) => {
-			tx.executeSql(
-				'SELECT * FROM todos',
-				[],
-				(_, result) => {
-					resolve(result);
-				}
-			);
+			tx.executeSql('SELECT * FROM myTodos', [], (_, result) => {
+				resolve(result);
+			});
 		});
 	});
 	return promise;
@@ -81,13 +81,9 @@ export const fetchTodos = () => {
 export const fetchLists = () => {
 	const promise = new Promise((resolve, reject) => {
 		db.transaction((tx) => {
-			tx.executeSql(
-				'SELECT * FROM lists',
-				[],
-				(_, result) => {
-					resolve(result);
-				}
-			);
+			tx.executeSql('SELECT * FROM lists', [], (_, result) => {
+				resolve(result);
+			});
 		});
 	});
 	return promise;

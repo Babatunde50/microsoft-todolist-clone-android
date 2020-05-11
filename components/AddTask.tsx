@@ -41,7 +41,15 @@ const AddTask: React.FC<taskArgs> = ({
 			<View style={styles.input}>
 				<FontAwesome name="circle-thin" size={18} color="#868a8f" />
 				<TextInput value={task} onChangeText={taskInputHandler} style={styles.textInput} placeholder="Task Title" />
-				<MaterialCommunityIcons name="arrow-up-box" size={30} color="#868a8f" onPress={submitTaskHandler} />
+				<MaterialCommunityIcons
+					name="arrow-up-box"
+					size={30}
+					color={task.trim().length > 0 ? 'blue' : '#ccc'}
+					onPress={() => {
+						if(task.trim().length <= 0) return;
+						submitTaskHandler()
+					}}
+				/>
 			</View>
 			<ScrollView horizontal={true} style={styles.actions} contentContainerStyle={styles.contentContainer}>
 				<View style={styles.action}>

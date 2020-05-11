@@ -12,12 +12,11 @@ const useAddTodo = () => {
 	const [showReminder, setShowReminder] = useState(false);
 	const [showRepeat, setShowRepeat] = useState(false);
 
+
 	const taskInputHandler = (text: string) => {
 		setTask(text);
 	};
-	const addNewTask = () => {
-		console.log('Submit');
-	};
+	
 	const dueDateShow = () => {
 		if (showReminder || showDueDate) {
 			cancelAllShows();
@@ -95,7 +94,6 @@ const useAddTodo = () => {
 		closeReminderHandler,
 		closeRepeatHandler,
         taskInputHandler,
-        addNewTask,
         dueDateHandler,
         closeDueDateHandler,
         addTaskShow,
