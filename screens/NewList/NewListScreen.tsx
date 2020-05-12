@@ -8,10 +8,10 @@ import MyButton from '../../components/MyButton';
 import Colors from '../../utils/colors';
 import FabButton from '../../components/FabButton';
 import { NewListProp } from '../../navigation/TodoNavigation';
-import { TodoListContext } from '../../providers/TodoList'
+import { TodoListContext, todoContext } from '../../providers/TodoList'
 
 function NewListScreen({ route, navigation }: NewListProp) {
-    const todoDB = useContext(TodoListContext);
+    const todoDB = useContext(TodoListContext) as todoContext;
     const { listName, newList } = route.params;
     const [ groupName, setGroupName] = useState("");
     const [title, setTitle] = useState(listName);

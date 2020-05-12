@@ -1,13 +1,14 @@
-import React from 'react';
-import { StyleSheet, View, TextInput, ScrollView, Text, TouchableOpacity } from 'react-native';
+import React, { useRef } from 'react';
+import { StyleSheet, View, TextInput, ScrollView, Text, TouchableOpacity, Button } from 'react-native';
 import { FontAwesome, MaterialCommunityIcons, Entypo, AntDesign } from '@expo/vector-icons';
+import SlidingUpPanel from 'rn-sliding-up-panel';
 
 type taskArgs = {
 	task: string;
 	show: boolean;
-	dueDate: Date | null;
-	reminderDate: Date | null;
-	repeatType: string | null;
+	dueDate: Date | undefined;
+	reminderDate: Date | undefined;
+	repeatType: string;
 	taskInputHandler: (val: string) => void;
 	submitTaskHandler: () => void;
 	showDueDateHandler: () => void;
@@ -36,6 +37,7 @@ const AddTask: React.FC<taskArgs> = ({
 	if (!show) {
 		return null;
 	}
+	const panelElement = useRef<SlidingUpPanel>(null);
 	return (
 		<View style={styles.container}>
 			<View style={styles.input}>
@@ -46,8 +48,8 @@ const AddTask: React.FC<taskArgs> = ({
 					size={30}
 					color={task.trim().length > 0 ? 'blue' : '#ccc'}
 					onPress={() => {
-						if(task.trim().length <= 0) return;
-						submitTaskHandler()
+						if (task.trim().length <= 0) return;
+						submitTaskHandler();
 					}}
 				/>
 			</View>
@@ -115,6 +117,12 @@ const styles = StyleSheet.create({
 		bottom: 0,
 		left: 0,
 		zIndex: 100,
+	},
+	panel: {
+		flex: 1,
+		backgroundColor: 'white',
+		alignItems: 'center',
+		justifyContent: 'center',
 	},
 	input: {
 		flexDirection: 'row',

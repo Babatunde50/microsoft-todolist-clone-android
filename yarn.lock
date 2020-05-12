@@ -1817,6 +1817,11 @@ ci-info@^2.0.0:
   resolved "https://registry.yarnpkg.com/ci-info/-/ci-info-2.0.0.tgz#67a9e964be31a51e15e5010d58e6f12834002f46"
   integrity sha512-5tK7EtrZ0N+OLFMthtqOj4fI2Jeb88C4CAZPu25LDVUgXJ0A3Js4PMGqrn0JU1W0Mh1/Z8wZzYPxqUrXeBboCQ==
 
+clamp@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/clamp/-/clamp-1.0.1.tgz#66a0e64011816e37196828fdc8c8c147312c8634"
+  integrity sha1-ZqDmQBGBbjcZaCj9yMjBRzEshjQ=
+
 class-utils@^0.3.5:
   version "0.3.6"
   resolved "https://registry.yarnpkg.com/class-utils/-/class-utils-0.3.6.tgz#f93369ae8b9a7ce02fd41faad0ca83033190c463"
@@ -4416,6 +4421,11 @@ react-native-status-color-picker@^1.0.5:
   resolved "https://registry.yarnpkg.com/react-native-status-color-picker/-/react-native-status-color-picker-1.0.5.tgz#aaefc32519cff3d21be69aac0b9589d99a3a2610"
   integrity sha512-+7srqYc1J5XyHkt5n28pjriUEPhnng9Ijj0wxxuZvLOv8KrU1UfuQ3r+5dmPIXDUs+3MAg/RlkNu0Nvf/1tiyQ==
 
+react-native-swipe-up-down@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/react-native-swipe-up-down/-/react-native-swipe-up-down-1.0.7.tgz#083714875b5db1c81d589a09eb8c32a9ffae30a4"
+  integrity sha512-8j3mo+ukZBLRfQNz5N/TXLG7hTKTT8fg/2HkWWJ9umRzPz2kDthxzIkntp9QRPVh7h/sRymkhZdtLY3axdO2Zw==
+
 react-native-view-shot@3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/react-native-view-shot/-/react-native-view-shot-3.1.2.tgz#8c8e84c67a4bc8b603e697dbbd59dbc9b4f84825"
@@ -4653,6 +4663,14 @@ rimraf@~2.2.6:
   version "2.2.8"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.2.8.tgz#e439be2aaee327321952730f99a8929e4fc50582"
   integrity sha1-5Dm+Kq7jJzIZUnMPmaiSnk/FBYI=
+
+rn-sliding-up-panel@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/rn-sliding-up-panel/-/rn-sliding-up-panel-2.4.0.tgz#ed3685460fe3b856d60438641735ca3c8530f6e8"
+  integrity sha512-UkEKKcOHgaLKZIYH+fAqTnwHPEcH17srB5MPMJ3IPEPgcz6Js+N3oZpte2wfP92UST9HWVr9lpJUPI4M4dIW6Q==
+  dependencies:
+    clamp "^1.0.1"
+    prop-types "^15.7.2"
 
 rsvp@^4.8.4:
   version "4.8.5"

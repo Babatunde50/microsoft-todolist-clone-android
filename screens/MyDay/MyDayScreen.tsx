@@ -7,19 +7,21 @@ import AddTask from '../../components/AddTask';
 import TimeTask from '../../components/TimeTask';
 import SmallCard from '../../components/SmallCard';
 import TodoCard from '../../components/TodoCard';
-import { dueDateActions , remindMeActions, repeatActions } from '../../utils/days';
+import { dueDateActions, remindMeActions, repeatActions } from '../../utils/days';
 
-import useAddTodo from '../../hooks/useAddTodo'
-import { TodoListContext, todoContext } from '../../providers/TodoList'
+import useAddTodo from '../../hooks/useAddTodo';
+import { TodoListContext, todoContext } from '../../providers/TodoList';
+import { MyDayProps } from '../../navigation/TodoNavigation';
 
 type todoModel = {
-	category: string,
-	favourite: boolean, 
-	title: string,
-	id: string
-}
+	screen: string;
+	important: number;
+	title: string;
+	id: string;
+	listType: string;
+};
 
-const MyDayScreen: React.FC = () => {
+function MyDayScreen ({ route, navigation }: MyDayProps)  {
 	const {
 		task,
 		showAddTask,
@@ -43,74 +45,82 @@ const MyDayScreen: React.FC = () => {
 		closeRepeatHandler,
 		addRepeatHandler,
 		removeRepeatHandler,
-		repeatType
+		repeatType,
 	} = useAddTodo();
 	const todayDate = new Date().toString().split(' ');
 	const { todos, addTodo } = useContext(TodoListContext) as todoContext;
-	const [ myDayTodos, setMyDayTodo] = useState<null | todoModel[]>(null)
-	
+	const [myDayTodos, setMyDayTodo] = useState<null | todoModel[]>(null);
+
 	const addNewTask = () => {
-		console.log('adding todo...')
-		// addTodo(task, "myDay");
+		let reminder: string;
+		if (!reminderDate) {
+			reminder = '';
+		} else {
+			reminder = reminderDate.toString();
+		}
+		addTodo(task, 'myDay', 0, 'tasks', reminder, dueDate?.toString(), repeatType);
 		cancelAllShows();
 	};
 
-	console.log(todos[0].title, "myDAy")
-	// console.log(todo)
-
 	useEffect(() => {
-		const filteredTodos = todos.filter( (todo: any) => todo.category === "myDay");
-
-		// compare if filteredTodos is equal to myDayTodo in the state, if equal return;
-		
-		const transformedTodos: todoModel[] = filteredTodos.map( (filteredTodo: any) => {
-			const transformedTodo: todoModel = {
-				category: filteredTodo.category,
-				favourite: !!filteredTodo.favourite,
-				title: filteredTodo.title,
-				id: filteredTodo.id.toString()
-			}
-			return transformedTodo;
-		})
+		const transformedTodos: todoModel[] = todos
+			.filter((todo: any) => todo.screen === 'myDay')
+			.map((filteredTodo: any) => {
+				const transformedTodo: todoModel = {
+					id: filteredTodo.id.toString(),	
+					...filteredTodo
+				};
+				return transformedTodo;
+			});
+			// console.log(transformedTodos);
 		setMyDayTodo(transformedTodos);
-	}, [todos] )
+	}, [todos]);
 	return (
 		<TouchableWithoutFeedback style={styles.screen} onPress={cancelAllShows}>
-			<ImageBackground 
-				source={require('../../assets/images/myday.webp')} 
-				style={styles.image}>
+			<ImageBackground source={require('../../assets/images/myday.webp')} style={styles.image}>
 				<Text style={styles.myDayText}> My Day</Text>
-				<Text style={styles.dateText} > {`${todayDate[0]}, ${todayDate[1]} ${todayDate[2]}`} </Text>
-				{/* <View style={styles.todoList}> */}
-					<FlatList
-						data={myDayTodos}
-						renderItem={({ item }) => (
-							<TodoCard title={item.title} />
-						)}
-						keyExtractor={(item) => item.id }
-					/>
-				{/* </View> */}
+				<Text style={styles.dateText}> {`${todayDate[0]}, ${todayDate[1]} ${todayDate[2]}`} </Text>
+				<FlatList
+					data={myDayTodos}
+					renderItem={({ item }) => <TodoCard title={item.title} id={+item.id} isFav={item.important} listType={item.listType} navigation={navigation} />}
+					keyExtractor={(item) => item.id}
+				/>
 				<SmallCard>
 					<Entypo name="light-up" size={15} color="white" />
 					<Text style={styles.todayText}> Today </Text>
 				</SmallCard>
-				<FabButton style={{backgroundColor: "#376e69"}} onPress={addTaskShow}>  
-                	<Entypo name="plus" size={32} color="white" />
-            	</FabButton>
-				<TimeTask show={showDueDate} close={closeDueDateHandler}  getDateHandler={dueDateHandler} actions={dueDateActions(new Date().getDay())} />
-				<TimeTask show={showReminder} close={ closeReminderHandler } getDateHandler={addReminderDate} actions={remindMeActions(new Date().getDay())} />
-				<TimeTask show={showRepeat} close={ closeRepeatHandler } getDateHandler={addRepeatHandler} actions={repeatActions()} />
-				<AddTask 
+				<FabButton style={{ backgroundColor: '#376e69' }} onPress={addTaskShow}>
+					<Entypo name="plus" size={32} color="white" />
+				</FabButton>
+				<TimeTask
+					show={showDueDate}
+					close={closeDueDateHandler}
+					getDateHandler={dueDateHandler}
+					actions={dueDateActions(new Date().getDay())}
+				/>
+				<TimeTask
+					show={showReminder}
+					close={closeReminderHandler}
+					getDateHandler={addReminderDate}
+					actions={remindMeActions(new Date().getDay())}
+				/>
+				<TimeTask
+					show={showRepeat}
+					close={closeRepeatHandler}
+					getDateHandler={addRepeatHandler}
+					actions={repeatActions()}
+				/>
+				<AddTask
 					show={showAddTask}
-					task={task} 
+					task={task}
 					dueDate={dueDate}
 					reminderDate={reminderDate}
 					repeatType={repeatType}
 					removeDueDate={removeDueDate}
 					removeReminderDate={removeReminderDate}
 					removeRepeatType={removeRepeatHandler}
-					taskInputHandler={taskInputHandler} 
-					submitTaskHandler={addNewTask} 
+					taskInputHandler={taskInputHandler}
+					submitTaskHandler={addNewTask}
 					showDueDateHandler={dueDateShow}
 					showReminderHandler={reminderShow}
 					showRepeatHandler={repeatShow}
@@ -122,34 +132,34 @@ const MyDayScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
 	screen: {
-	  flex: 1,
-	  flexDirection: "column"
+		flex: 1,
+		flexDirection: 'column',
 	},
 	image: {
-	  flex: 1,
-	  resizeMode: "center",
-	  backgroundColor: 'rgba(0,0,0,.8)',
-	  paddingHorizontal: 5
+		flex: 1,
+		resizeMode: 'center',
+		backgroundColor: 'rgba(0,0,0,.8)',
+		//   paddingHorizontal: 5
 	},
 	myDayText: {
 		fontFamily: 'Roboto-Bold',
 		fontSize: 30,
 		color: 'white',
-		paddingHorizontal: 10
+		paddingHorizontal: 10,
 	},
 	dateText: {
 		fontFamily: 'Roboto-Bold',
 		fontSize: 18,
 		color: 'white',
 		letterSpacing: 3,
-		paddingHorizontal: 10
+		paddingHorizontal: 10,
 	},
 	todayText: {
-		fontFamily: "Roboto-Bold",
+		fontFamily: 'Roboto-Bold',
 		fontSize: 15,
-		color: "white",
-		marginLeft: 5
-	}
-  });
+		color: 'white',
+		marginLeft: 5,
+	},
+});
 
 export default MyDayScreen;

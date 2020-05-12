@@ -5,7 +5,7 @@ import { Entypo, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import TaskListButton from '../components/TaskListButton';
 import Modal from '../components/Modal';
 import MyButton from '../components/MyButton';
-import { TodoListContext, todoContext, list } from '../providers/TodoList';
+import { TodoListContext, todoContext } from '../providers/TodoList';
 import { HomeProps } from '../navigation/TodoNavigation';
 
 function HomeScreen({ route, navigation }: HomeProps) {
@@ -100,7 +100,7 @@ function HomeScreen({ route, navigation }: HomeProps) {
 								}}
 							/>
 						)}
-						keyExtractor={(item: list) => item.id.toString(); }
+						keyExtractor={(item) => item.id.toString()}
 					/>
 				</View>
 				<View style={styles.listAction}>

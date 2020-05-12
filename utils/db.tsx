@@ -1,7 +1,7 @@
 import * as SQLite from 'expo-sqlite';
 import { SQLResultSet } from 'expo-sqlite';
 
-const db = SQLite.openDatabase('todosDB.db');
+const db = SQLite.openDatabase('myTodos.db');
 
 export const init = () => {
 	const promise = new Promise((resolve, reject) => {
@@ -37,13 +37,13 @@ export const addNewTodo = (
 	listType: string,
 	reminder: string,
 	dueDate?: string,
-	repeat?: number
+	repeat?: string
 ) => {
 	const promise = new Promise((resolve, reject) => {
 		db.transaction((tx: any) => {
 			tx.executeSql(
-				'INSERT INTO myTodos (title, screen, important, listType, reminder, dueDate, repeat) VALUES (?,?,?,?,?,?,?)',
-				[title, screen, important, listType, reminder, dueDate, repeat],
+				'INSERT INTO myTodos (title, screen, important, listType, reminder, dueDate, repeat, createdAt) VALUES (?,?,?,?,?,?,?,?)',
+				[title, screen, important, listType, reminder, dueDate, repeat, new Date().toString()],
 				(_: SQLTransaction, result: SQLResultSet) => {
 					resolve(result);
 				},
@@ -77,6 +77,17 @@ export const fetchTodos = () => {
 	});
 	return promise;
 };
+
+export const toggleFavouriteTodo = (important: number, id: number ) => {
+	const promise = new Promise((resolve, reject) => {
+		db.transaction((tx: SQLTransaction) => {
+			tx.executeSql('UPDATE myTodos SET important = ? WHERE id = ?', [important, id], (_, result: SQLResultSet) => {
+				resolve(result);
+			})
+		})
+	})
+	return promise;
+}
 
 export const fetchLists = () => {
 	const promise = new Promise((resolve, reject) => {

@@ -1,23 +1,35 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useContext } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+
+import { TodoListContext, todoContext } from '../providers/TodoList';
+import { MyDayNavigationProp } from '../navigation/TodoNavigation'
 
 type item = {
 	title: string;
+	id: number;
+	isFav: number;
+	listType: string;
+	navigation: MyDayNavigationProp
 };
 
-const TodoCard: React.FC<item> = ({ title }) => {
+const TodoCard: React.FC<item> = ({ title, listType, isFav, id, navigation }) => {
+	const { toggleImportant } = useContext(TodoListContext) as todoContext;
 	return (
-		<View style={styles.todoContainer}>
+		<TouchableOpacity style={styles.todoContainer} activeOpacity={0.9}  onPress={() => {
+			navigation.navigate("TodoDetails", { id })
+		}}>
 			<View style={styles.todoTexts}>
 				<FontAwesome name="circle-thin" size={28} color="#868a8f" />
 				<View style={styles.textsContainter}>
 					<Text style={styles.todoTitle}> {title} </Text>
-					<Text style={styles.todoType}> Task </Text>
+					<Text style={styles.todoType}> { listType } </Text>
 				</View>
 			</View>
-			<FontAwesome name="star" size={28} color="#ccc" />
-		</View>
+			<FontAwesome name="star" size={28} color={isFav === 1 ? "red" : "#ccc"} onPress={() => {
+				toggleImportant(id, +(!isFav) )
+			}} />
+		</TouchableOpacity>
 	);
 };
 

@@ -3,9 +3,9 @@ import { useState } from 'react';
 const useAddTodo = () => {
 	// Task 
 	const [task, setTask] = useState('');
-	const [ dueDate, setDueDate] = useState<Date | null>(null);
-	const [ reminderDate, setReminderDate ] = useState<Date | null>(null);
-	const [ repeatType, setRepeatType] = useState<null | string>(null)
+	const [ dueDate, setDueDate] = useState<Date | undefined>();
+	const [ reminderDate, setReminderDate ] = useState<Date | undefined>();
+	const [ repeatType, setRepeatType] = useState<string>('')
 	// Visual States
 	const [showAddTask, setShowAddTask] = useState(false);
 	const [showDueDate, setShowDueDate] = useState(false);

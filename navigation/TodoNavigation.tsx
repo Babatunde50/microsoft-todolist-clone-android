@@ -10,7 +10,8 @@ import MyDayListScreen from '../screens/MyDay/MyDayScreen';
 import PlannedListScreen from '../screens/Planned/PlannedListScreen';
 import TasksListScreen from '../screens/Tasks/TasksListScreen';
 import HomeScreen, { HomeHeaderTitle } from '../screens/HomeScreen';
-import NewListScreen from '../screens/NewList/NewListScreen'
+import NewListScreen from '../screens/NewList/NewListScreen';
+import TodoDetailScreen from '../screens/TodoDetailsScreen';
 
 type RootStackParamList = {
 	Home: undefined;
@@ -19,6 +20,7 @@ type RootStackParamList = {
 	Myday: undefined;
 	Planned: undefined;
 	Tasks: undefined;
+	TodoDetails: {id: number};
 	NewList: {listName: string, newList: boolean }
   };
 
@@ -32,6 +34,14 @@ export type HomeProps = {
   navigation: HomeScreenNavigationProp;
   route: HomeScreenRouteProp;
 };
+
+export type MyDayNavigationProp = StackNavigationProp<RootStackParamList, 'TodoDetails'>
+type MyDayRouteProp = RouteProp<RootStackParamList, 'TodoDetails'>
+
+export type MyDayProps = {
+	navigation: MyDayNavigationProp;
+	route: MyDayRouteProp;
+}
 
 type NewListScreenNavigationProp = StackNavigationProp<RootStackParamList, 'NewList'>;
 type NewListScreenRouteProp = RouteProp<RootStackParamList, 'NewList'>;
@@ -89,6 +99,7 @@ const TodoListNavigator = () => (
 				</View>
 			)
 		}} />
+		<TodoListStackNavigator.Screen name="TodoDetails" component={TodoDetailScreen} />
 	</TodoListStackNavigator.Navigator>
 );
 

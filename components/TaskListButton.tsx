@@ -21,7 +21,7 @@ const TaskListButton: React.FC<{ title: string; iconName: string; iconSize: numb
 
 const styles = StyleSheet.create({
     button: {
-		backgroundColor: 'white',
+		// backgroundColor: 'white',
 		paddingVertical: 12,
         marginBottom: 8,
 		flexDirection: 'row',
