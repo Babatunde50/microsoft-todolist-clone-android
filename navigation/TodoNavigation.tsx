@@ -51,6 +51,14 @@ export type NewListProp = {
 	route: NewListScreenRouteProp
 }
 
+type TodoDetailsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TodoDetails'>;
+type TodoDetailsScreenRouteProp = RouteProp<RootStackParamList, 'TodoDetails'>;
+
+export type TodoDetailsProp = {
+	navigation: TodoDetailsScreenNavigationProp,
+	route: TodoDetailsScreenRouteProp
+}
+
 const TodoListStackNavigator = createStackNavigator<RootStackParamList>();
 
 const TodoListNavigator = () => (

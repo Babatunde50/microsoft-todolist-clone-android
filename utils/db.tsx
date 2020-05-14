@@ -1,13 +1,14 @@
 import * as SQLite from 'expo-sqlite';
 import { SQLResultSet } from 'expo-sqlite';
 
-const db = SQLite.openDatabase('myTodos.db');
+const db = SQLite.openDatabase('xxx.db');
+import { repeatOptions } from '../utils/notification'
 
 export const init = () => {
 	const promise = new Promise((resolve, reject) => {
 		db.transaction((tx: any) => {
 			tx.executeSql(
-				'CREATE TABLE IF NOT EXISTS myTodos (id INTEGER PRIMARY KEY NOT NULL, title TEXT NOT NULL, screen TEXT NOT NULL, important INT NOT NULL, listType TEXT NOT NULL, createdAt TEXT NOT NULL, steps TEXT, reminder DATE, dueDate DATE, repeat INT, note TEXT )',
+				'CREATE TABLE IF NOT EXISTS myTodos (id INTEGER PRIMARY KEY NOT NULL, title TEXT NOT NULL, screen TEXT NOT NULL, important INT NOT NULL, listType TEXT NOT NULL, createdAt TEXT NOT NULL, dueDateId TEXT, reminderDateId TEXT, steps TEXT, reminder DATE, dueDate DATE, repeat INT, note TEXT )',
 				[],
 				() => {
 					resolve();
@@ -35,15 +36,17 @@ export const addNewTodo = (
 	screen: string,
 	important: number,
 	listType: string,
-	reminder: string,
+	reminder?: string,
 	dueDate?: string,
-	repeat?: string
+	dueDateId?: string,
+	reminderDateId?: number,
+	repeat?: repeatOptions
 ) => {
 	const promise = new Promise((resolve, reject) => {
 		db.transaction((tx: any) => {
 			tx.executeSql(
-				'INSERT INTO myTodos (title, screen, important, listType, reminder, dueDate, repeat, createdAt) VALUES (?,?,?,?,?,?,?,?)',
-				[title, screen, important, listType, reminder, dueDate, repeat, new Date().toString()],
+				'INSERT INTO myTodos (title, screen, important, listType, reminder, dueDate, repeat, createdAt, dueDateId, reminderDateId) VALUES (?,?,?,?,?,?,?,?,?,?)',
+				[title, screen, important, listType, reminder, dueDate, repeat, new Date().toString(), dueDateId, reminderDateId],
 				(_: SQLTransaction, result: SQLResultSet) => {
 					resolve(result);
 				},

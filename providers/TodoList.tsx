@@ -1,5 +1,8 @@
 import React, { useState, createContext, useEffect } from 'react';
+
 import { addNewList, addNewTodo, fetchTodos, fetchLists, toggleFavouriteTodo } from '../utils/db';
+import { createEventDueDate } from '../utils/calendars';
+import { createNewReminder, repeatOptions } from '../utils/notification';
 
 export interface todo {
 	id: number;
@@ -7,10 +10,11 @@ export interface todo {
 	screen: string;
 	important: number;
 	listType: string;
-	reminder: string;
+	reminder?: string;
 	dueDate?: string;
 	repeat?: number;
 	note?: string;
+	steps?: string | null;
 }
 
 export interface list {
@@ -27,9 +31,9 @@ export type todoContext = {
 		screen: string,
 		important: number,
 		listType: string,
-		reminder: string,
+		reminder?: string,
 		dueDate?: string,
-		repeat?: string
+		repeat?: repeatOptions
 	) => void;
 	addList: (title: string, color: string) => void;
 	toggleImportant: (id: number, imp: number) => void;
@@ -48,11 +52,19 @@ const TodoListProvider: React.FC = ({ children }) => {
 		screen: string,
 		important: number,
 		listType: string,
-		reminder: string,
+		reminder?: string,
 		dueDate?: string,
-		repeat?: string
+		repeat?: repeatOptions
 	) => {
 		try {
+			let dueDateId;
+			let reminderDateId;
+			if (dueDate) {
+				dueDateId = await createEventDueDate(dueDate, title);
+			}
+			if (reminder) {
+				reminderDateId = (await createNewReminder(title, reminder, repeat)) as number;
+			}
 			const newTodo: SQLResultSet = (await addNewTodo(
 				title,
 				screen,
@@ -60,6 +72,8 @@ const TodoListProvider: React.FC = ({ children }) => {
 				listType,
 				reminder,
 				dueDate,
+				dueDateId,
+				reminderDateId,
 				repeat
 			)) as SQLResultSet;
 			const insertedTodo = {
@@ -70,12 +84,11 @@ const TodoListProvider: React.FC = ({ children }) => {
 				reminder,
 				dueDate,
 				repeat,
-				screen
+				screen,
 			};
-			console.log(insertedTodo);
 			setTodos((todos: any) => [insertedTodo, ...todos]);
 		} catch (err) {
-			console.log(err);
+			console.log(err.message);
 		}
 	};
 
@@ -85,35 +98,30 @@ const TodoListProvider: React.FC = ({ children }) => {
 	};
 
 	const toggleImportant = async (id: number, imp: number) => {
-		console.log(imp, "IMP")
+		console.log(imp, 'IMP');
 		const toggled: any = await toggleFavouriteTodo(imp, id);
-		const index = todos.findIndex(todo => todo.id === id);
-		const copiedTodos = [ ...todos ];
-		copiedTodos[index] = { ...todos[index], important: imp};
+		const index = todos.findIndex((todo) => todo.id === id);
+		const copiedTodos = [...todos];
+		copiedTodos[index] = { ...todos[index], important: imp };
 		console.log(copiedTodos);
-		setTodos(copiedTodos)
-	}
-
-	// const deleteTodo = () => {
-	// 	// to be added later
-	// };
-
-	// const deleteList = () => {
-	// 	// to be added later
-	// };
+		setTodos(copiedTodos);
+	};
 
 	useEffect(() => {
-		const fetchData = async () => {
+		(async () => {
 			const todos: any = await fetchTodos();
 			const lists: any = await fetchLists();
-			// console.log(todos.rows._array, 'PROVIDER');
+			console.log(todos.rows._array, 'PROVIDER');
 			setTodos(todos.rows._array);
 			setLists(lists.rows._array);
-		};
-		fetchData();
+		})();
 	}, []);
 
-	return <TodoListContext.Provider value={{ todos, lists, addTodo, addList, toggleImportant }}>{children}</TodoListContext.Provider>;
+	return (
+		<TodoListContext.Provider value={{ todos, lists, addTodo, addList, toggleImportant }}>
+			{children}
+		</TodoListContext.Provider>
+	);
 };
 
 export default TodoListProvider;

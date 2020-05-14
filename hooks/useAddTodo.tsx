@@ -63,7 +63,7 @@ const useAddTodo = () => {
 	};
 	
 	const removeDueDate = () => {
-		setDueDate(null);
+		setDueDate(undefined);
 	}
 
 	const addReminderDate = (date: Date | string) => {
@@ -71,7 +71,7 @@ const useAddTodo = () => {
 	}
 
 	const removeReminderDate = () => {
-		setReminderDate(null);
+		setReminderDate(undefined);
 	}
 
 	const addRepeatHandler = (repeatType: string | Date ) => {
@@ -79,7 +79,7 @@ const useAddTodo = () => {
 	}
 
 	const removeRepeatHandler = () => {
-		setRepeatType(null);
+		setRepeatType('');
 	}
     
     return {

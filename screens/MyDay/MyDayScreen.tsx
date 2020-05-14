@@ -52,13 +52,7 @@ function MyDayScreen ({ route, navigation }: MyDayProps)  {
 	const [myDayTodos, setMyDayTodo] = useState<null | todoModel[]>(null);
 
 	const addNewTask = () => {
-		let reminder: string;
-		if (!reminderDate) {
-			reminder = '';
-		} else {
-			reminder = reminderDate.toString();
-		}
-		addTodo(task, 'myDay', 0, 'tasks', reminder, dueDate?.toString(), repeatType);
+		addTodo(task, 'myDay', 0, 'tasks', reminderDate, dueDate, repeatType);
 		cancelAllShows();
 	};
 

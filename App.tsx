@@ -4,10 +4,12 @@ import { AppLoading } from 'expo';
 
 import AppNavigator from './navigation/AppNavigation';
 import TodoListProvider from './providers/TodoList'
+import { createCalendar } from './utils/calendars';
 import { init } from './utils/db';
 
 init().then(() => {
 	console.log('Initialized database');
+	createCalendar();
   }).catch(err => {
 	console.log('Initializing db failed.')
 	console.log(err);

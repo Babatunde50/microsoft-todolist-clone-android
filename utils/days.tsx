@@ -50,16 +50,19 @@ export const dueDateActions = (num: number) => {
 export const remindMeActions = (num: number) => {
     return [
         {  
-            date: `Later Today (6:00)`,
-            icon: 'clock'
+            date: `In 5 hours`,
+            icon: 'clock',
+            reminder: 0
         },
         {  
             date: `Tomorrow (${getDay(num + 1)} 9:00)`,
-            icon: 'clock'
+            icon: 'clock',
+            reminder: 1
         },
         {  
-            date: `Next week (${getDay(0)} 9:00)`,
-            icon: 'clock'
+            date: `Next Week (${getDay(num)} 9:00)`,
+            icon: 'clock',
+            reminder: 2
         },
         {  
             date: "Pick a date",
@@ -71,32 +74,32 @@ export const remindMeActions = (num: number) => {
 export const repeatActions = () => {
     return [
         {  
-            date: `Daily`,
+            date: 'minute',
             icon: 'figma',
             returnType: 'string'
         },
         {  
-            date: `Weekdays`,
+            date: 'hour',
             icon: 'more-horizontal',
             returnType: 'string'
         },
         {  
-            date: `Weekly`,
+            date: 'day',
             icon: 'more-vertical',
             returnType: 'string'
         },
         {  
-            date: "Monthly",
+            date: "week",
             icon: 'slack',
             returnType: 'string'
         },
         {  
-            date: "Yearly",
+            date: "month",
             icon: 'figma',
             returnType: 'string'
         },
         {  
-            date: "Custom",
+            date: "year",
             icon: 'grid',
             returnType: 'string'
         },

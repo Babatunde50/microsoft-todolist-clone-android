@@ -8,7 +8,7 @@ import TaskListButton from './TaskListButton';
 
 type args = {
 	show: boolean,
-	actions: {icon: string, date: string, id?: number, returnType?: string}[],
+	actions: {icon: string, date: string, id?: number, returnType?: string, reminder?: number}[],
 	getDateHandler: (date: Date | string) => void,
 	close: () => void
 }
@@ -63,10 +63,30 @@ const TimeTask: React.FC<args> = ({ show, actions, getDateHandler, close }) => {
 								close();
 								return
 							}
-							let day = new Date();
-							day.setDate(day.getDate() + action!.id! || 0 )
-							getDateHandler(new Date(day));
-							close();
+							if(action.id !== undefined) {
+								let day = new Date();
+								day.setDate(day.getDate() + action.id || 0 )
+								getDateHandler(new Date(day));
+								close();
+								return;
+							}
+							if(action.reminder !== undefined) {
+								const year = new Date().getFullYear();
+								const month = new Date().getMonth();
+								const day = new Date().getDate();	
+								const hours = new Date().getHours();
+								let date: Date;
+								if(action.reminder === 0) {
+									date = new Date(year, month, day, hours + 6,0,0,0 )
+								} else if(action.reminder === 1) {
+									date = new Date(year, month, day + 1, 22, 0,0,0 )
+								} else {
+									date = new Date(year, month, day + 6, 22, 0, 0, 0)
+								}
+								getDateHandler(date);
+								close()
+								return;
+							}
 						}
 						
 					}}
