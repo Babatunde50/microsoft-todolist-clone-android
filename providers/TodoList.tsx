@@ -15,6 +15,7 @@ export interface todo {
 	repeat?: number;
 	note?: string;
 	steps?: string | null;
+	createdAt?: string
 }
 
 export interface list {
