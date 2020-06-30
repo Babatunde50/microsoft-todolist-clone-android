@@ -9,7 +9,6 @@ function TodoDetailsScreen({ route, navigation }: TodoDetailsProp) {
 	const { todos } = useContext(TodoListContext) as todoContext;
 	const { id } = route.params;
 	const foundTodo = todos.find((todo) => todo.id === id);
-	console.log(foundTodo);
 	return (
 		<KeyboardAvoidingView style={styles.screen}>
 			<View style={styles.header}>

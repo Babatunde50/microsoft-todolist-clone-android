@@ -52,7 +52,7 @@ function MyDayScreen ({ route, navigation }: MyDayProps)  {
 	const [myDayTodos, setMyDayTodo] = useState<null | todoModel[]>(null);
 
 	const addNewTask = () => {
-		addTodo(task, 'myDay', 0, 'tasks', reminderDate, dueDate, repeatType);
+		addTodo(task, 'myDay', 0, 'tasks', reminderDate?.toString(), dueDate?.toString(), repeatType);
 		cancelAllShows();
 	};
 
@@ -66,7 +66,6 @@ function MyDayScreen ({ route, navigation }: MyDayProps)  {
 				};
 				return transformedTodo;
 			});
-			// console.log(transformedTodos);
 		setMyDayTodo(transformedTodos);
 	}, [todos]);
 	return (

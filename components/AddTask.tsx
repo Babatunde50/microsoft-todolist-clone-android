@@ -2,13 +2,14 @@ import React, { useRef } from 'react';
 import { StyleSheet, View, TextInput, ScrollView, Text, TouchableOpacity, Button } from 'react-native';
 import { FontAwesome, MaterialCommunityIcons, Entypo, AntDesign } from '@expo/vector-icons';
 import SlidingUpPanel from 'rn-sliding-up-panel';
+import { repeatOptions } from '../utils/notification';
 
 type taskArgs = {
 	task: string;
 	show: boolean;
 	dueDate: Date | undefined;
 	reminderDate: Date | undefined;
-	repeatType: string;
+	repeatType: repeatOptions | undefined;
 	taskInputHandler: (val: string) => void;
 	submitTaskHandler: () => void;
 	showDueDateHandler: () => void;

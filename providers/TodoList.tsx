@@ -99,12 +99,10 @@ const TodoListProvider: React.FC = ({ children }) => {
 	};
 
 	const toggleImportant = async (id: number, imp: number) => {
-		console.log(imp, 'IMP');
 		const toggled: any = await toggleFavouriteTodo(imp, id);
 		const index = todos.findIndex((todo) => todo.id === id);
 		const copiedTodos = [...todos];
 		copiedTodos[index] = { ...todos[index], important: imp };
-		console.log(copiedTodos);
 		setTodos(copiedTodos);
 	};
 
@@ -112,7 +110,6 @@ const TodoListProvider: React.FC = ({ children }) => {
 		(async () => {
 			const todos: any = await fetchTodos();
 			const lists: any = await fetchLists();
-			console.log(todos.rows._array, 'PROVIDER');
 			setTodos(todos.rows._array);
 			setLists(lists.rows._array);
 		})();

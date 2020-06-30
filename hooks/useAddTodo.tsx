@@ -1,11 +1,12 @@
 import { useState } from 'react';
+import { repeatOptions } from '../utils/notification';
 
 const useAddTodo = () => {
 	// Task 
 	const [task, setTask] = useState('');
 	const [ dueDate, setDueDate] = useState<Date | undefined>();
 	const [ reminderDate, setReminderDate ] = useState<Date | undefined>();
-	const [ repeatType, setRepeatType] = useState<string>('')
+	const [ repeatType, setRepeatType] = useState<repeatOptions>();
 	// Visual States
 	const [showAddTask, setShowAddTask] = useState(false);
 	const [showDueDate, setShowDueDate] = useState(false);
@@ -75,11 +76,11 @@ const useAddTodo = () => {
 	}
 
 	const addRepeatHandler = (repeatType: string | Date ) => {
-		setRepeatType(repeatType as string);
+		setRepeatType(repeatType as repeatOptions);
 	}
 
 	const removeRepeatHandler = () => {
-		setRepeatType('');
+		setRepeatType(undefined);
 	}
     
     return {
