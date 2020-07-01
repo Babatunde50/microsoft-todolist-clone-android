@@ -79,10 +79,32 @@ const TodoListNavigator = () => (
                 )
 			}}
 		/>
-		<TodoListStackNavigator.Screen name="Assign" component={AssignedListScreen} />
-		<TodoListStackNavigator.Screen name="Important" component={ImportantListScreen} />
+		<TodoListStackNavigator.Screen name="Assign" component={AssignedListScreen} options={{
+			title: '',
+			headerStyle: {
+				elevation: 0,
+				backgroundColor: "#b6d9b4",
+				shadowColor: "#b6d9b4"
+			},
+			headerRight: () => (
+				<View style={{padding: 10}}>
+					<MaterialCommunityIcons name="dots-vertical" size={25} color="green" />
+				</View>
+			)
+		}} />
+		<TodoListStackNavigator.Screen name="Important" component={ImportantListScreen} options={{
+			title: "",
+			headerStyle: {
+				elevation: 1
+			},
+			headerRight: () => (
+				<View style={{padding: 10}}>
+					<MaterialCommunityIcons name="dots-vertical" size={25} color="#eb7134" />
+				</View>
+			)
+		}} />
 		<TodoListStackNavigator.Screen name="Myday" component={MyDayListScreen} options={{
-			title: "TundeJS",
+			title: "",
 			headerStyle: {
 				elevation: 1,
 			},
