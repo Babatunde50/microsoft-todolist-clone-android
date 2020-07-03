@@ -13,6 +13,7 @@ function HomeScreen({ route, navigation }: HomeProps) {
 	const [groupName, setGroupName] = useState('');
 	const [showModal, setShowModal] = useState(false);
 	let disabled = groupName.length < 1 ? true : false;
+	console.log(todosDB.todos)
 	return (
 		<View style={styles.screen}>
 			<Modal isOpen={showModal}>
@@ -44,6 +45,7 @@ function HomeScreen({ route, navigation }: HomeProps) {
 					iconName="sun"
 					iconSize={15}
 					iconColor="#ccc"
+					totalItems={todosDB.todos.filter(todo => todo.screen === "myDay").length.toString()}
 					onPress={() => {
 						navigation.navigate('Myday');
 					}}
@@ -53,6 +55,7 @@ function HomeScreen({ route, navigation }: HomeProps) {
 					iconName="star"
 					iconSize={15}
 					iconColor="red"
+					totalItems={todosDB.todos.filter(todo => todo.important === 1).length.toString()}
 					onPress={() => {
 						navigation.navigate('Important');
 					}}
@@ -80,6 +83,7 @@ function HomeScreen({ route, navigation }: HomeProps) {
 					iconName="layers"
 					iconSize={15}
 					iconColor="#313699"
+					totalItems={todosDB.todos.length.toString()}
 					onPress={() => {
 						navigation.navigate('Tasks');
 					}}

@@ -8,7 +8,9 @@ import MyButton from '../../components/MyButton';
 import Colors from '../../utils/colors';
 import FabButton from '../../components/FabButton';
 import { NewListProp } from '../../navigation/TodoNavigation';
+
 import { TodoListContext, todoContext } from '../../providers/TodoList'
+import useAddTodo from '../../hooks/useAddTodo';
 
 function NewListScreen({ route, navigation }: NewListProp) {
     const todoDB = useContext(TodoListContext) as todoContext;
@@ -17,8 +19,38 @@ function NewListScreen({ route, navigation }: NewListProp) {
     const [title, setTitle] = useState(listName);
     const [showModal, setShowModal] = useState(newList);
     const [selectedColor, setSelectedColor] = useState('#F44336')
+    const {
+		task,
+		showAddTask,
+		showDueDate,
+		showReminder,
+		taskInputHandler,
+		dueDateHandler,
+		closeDueDateHandler,
+		addTaskShow,
+		cancelAllShows,
+		repeatShow,
+		reminderShow,
+		dueDateShow,
+		showRepeat,
+		dueDate,
+		removeDueDate,
+		addReminderDate,
+		removeReminderDate,
+		reminderDate,
+		closeReminderHandler,
+		closeRepeatHandler,
+		addRepeatHandler,
+		removeRepeatHandler,
+		repeatType,
+	} = useAddTodo();
 
     let disabled = groupName.length < 1 ? true : false;
+
+    const addNewTask = () => {
+		todoDB.addTodo(task, title, 0, title, reminderDate?.toString(), dueDate?.toString(), repeatType);
+		cancelAllShows();
+	};
 	return (
 		<View style={{flex: 1, backgroundColor: selectedColor}}>
             <Modal isOpen={showModal}> 
@@ -67,9 +99,10 @@ function NewListScreen({ route, navigation }: NewListProp) {
 				</View>
 			</Modal>
 			<Text style={styles.title}> {title} </Text>
-            <FabButton>  
-                <Entypo name="plus" size={32} color={selectedColor} />
-            </FabButton>
+            <FabButton style={{ backgroundColor: "white" }} onPress={ () => {} }>
+				<Entypo name="plus" size={32} color={selectedColor} />
+			</FabButton>
+            
 		</View>
 	);
 };

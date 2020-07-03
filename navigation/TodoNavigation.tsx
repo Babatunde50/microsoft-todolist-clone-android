@@ -70,7 +70,8 @@ const TodoListNavigator = () => (
                 headerTitle: (props) => <HomeHeaderTitle {...props} />,
                 headerStyle: {
                     backgroundColor: 'white',
-                    elevation: 0
+					elevation: 0,
+					shadowColor: 'white'
                 },
                 headerRight: () => (
                     <View style={{padding: 10}}>
@@ -95,7 +96,9 @@ const TodoListNavigator = () => (
 		<TodoListStackNavigator.Screen name="Important" component={ImportantListScreen} options={{
 			title: "",
 			headerStyle: {
-				elevation: 1
+				elevation: 0,
+				backgroundColor: "#ebd5d5",
+				shadowColor: "#ebd5d5"
 			},
 			headerRight: () => (
 				<View style={{padding: 10}}>
@@ -106,7 +109,10 @@ const TodoListNavigator = () => (
 		<TodoListStackNavigator.Screen name="Myday" component={MyDayListScreen} options={{
 			title: "",
 			headerStyle: {
-				elevation: 1,
+				elevation: 0,
+				backgroundColor: "#A3C3DC",
+				shadowColor: "#A3C3DC",
+				borderColor: "#A3C3DC"
 			},
 			headerRight: () => (
 				<View style={{padding: 10}}>

@@ -2,24 +2,31 @@ import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
-const TaskListButton: React.FC<{ title: string; iconName: string; iconSize: number; iconColor: string, onPress: () => void  }> = ({
+const TaskListButton: React.FC<{ totalItems?: string,  title: string; iconName: string; iconSize: number; iconColor: string, onPress: () => void  }> = ({
 	title,
 	iconName,
 	iconSize,
-    iconColor,
+	iconColor,
+	totalItems,
     onPress
 }) => {
 	return (
-		<TouchableOpacity activeOpacity={0.6} onPress={onPress}>
+		<TouchableOpacity style={styles.container} activeOpacity={0.6} onPress={onPress}>
 			<View style={styles.button}>
                 <Feather name={iconName} size={iconSize} color={iconColor} />
 				<Text style={styles.buttonText}>{title}</Text>
 			</View>
+			<Text style={styles.text}> { totalItems !== "0" && totalItems } </Text> 
 		</TouchableOpacity>
 	);
 };
 
 const styles = StyleSheet.create({
+	container: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center"
+	},
     button: {
 		// backgroundColor: 'white',
 		paddingVertical: 12,
@@ -34,6 +41,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         fontFamily: "Roboto-Bold"
 	},
+	text: {
+		color: "#5e6360",
+		fontSize: 15,
+        paddingHorizontal: 10,
+        fontFamily: "Roboto-Regular"
+	}
 })
 
 export default TaskListButton;

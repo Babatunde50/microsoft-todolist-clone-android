@@ -70,9 +70,11 @@ function MyDayScreen ({ route, navigation }: MyDayProps)  {
 	}, [todos]);
 	return (
 		<TouchableWithoutFeedback style={styles.screen} onPress={cancelAllShows}>
-			<ImageBackground source={require('../../assets/images/myday.webp')} style={styles.image}>
-				<Text style={styles.myDayText}> My Day</Text>
-				<Text style={styles.dateText}> {`${todayDate[0]}, ${todayDate[1]} ${todayDate[2]}`} </Text>
+			<ImageBackground source={require('../../assets/images/myday.jpeg')} style={styles.image}>
+				<View style={styles.titleContainer}>
+					<Text style={styles.myDayText}> My Day</Text>
+					<Text style={styles.dateText}> {`${todayDate[0]}, ${todayDate[1]} ${todayDate[2]}`} </Text>
+				</View>
 				<FlatList
 					data={myDayTodos}
 					renderItem={({ item }) => <TodoCard title={item.title} id={+item.id} isFav={item.important} listType={item.listType} navigation={navigation} />}
@@ -134,18 +136,22 @@ const styles = StyleSheet.create({
 		backgroundColor: 'rgba(0,0,0,.8)',
 		//   paddingHorizontal: 5
 	},
+	titleContainer: {
+		paddingVertical: 15,
+		paddingHorizontal: 15
+	},
 	myDayText: {
 		fontFamily: 'Roboto-Bold',
-		fontSize: 30,
+		fontSize: 22,
 		color: 'white',
-		paddingHorizontal: 10,
+		paddingVertical: 2,
 	},
 	dateText: {
 		fontFamily: 'Roboto-Bold',
-		fontSize: 18,
+		fontSize: 16,
 		color: 'white',
 		letterSpacing: 3,
-		paddingHorizontal: 10,
+		paddingVertical: 3,
 	},
 	todayText: {
 		fontFamily: 'Roboto-Bold',

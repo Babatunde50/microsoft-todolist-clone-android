@@ -6,7 +6,7 @@ const AssignedListScreen: React.FC = () => {
 		<View style={styles.screen}>
 			<Text style={styles.title}>Assigned to you</Text>
 			<View style={styles.centered}>
-				<Image source={require("../../assets/images/assign.jpeg")} style={styles.image} />
+				<Image source={require("../../assets/images/task.png")} style={styles.image} />
 				<Text style={styles.text}> Tasks assigned to you will appear here </Text>
 			</View>
 		</View>
@@ -31,9 +31,10 @@ const styles = StyleSheet.create({
 	},
 	image: {
 		borderRadius: 100,
-		height: 120,
-		width: 120,
-		backgroundColor: "#b6d9b4"
+		height: 150,
+		width: 150,
+		backgroundColor: "#b6d9b4",
+
 	},
 	text: {
 		color: "green",

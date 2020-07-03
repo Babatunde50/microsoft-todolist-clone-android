@@ -9,11 +9,12 @@ type item = {
 	title: string;
 	id: number;
 	isFav: number;
-	listType: string;
+	listType?: string;
+	color?: string
 	navigation: MyDayNavigationProp
 };
 
-const TodoCard: React.FC<item> = ({ title, listType, isFav, id, navigation }) => {
+const TodoCard: React.FC<item> = ({ title, listType, isFav, id, navigation, color="red" }) => {
 	const { toggleImportant } = useContext(TodoListContext) as todoContext;
 	return (
 		<TouchableOpacity style={styles.todoContainer} activeOpacity={0.9}  onPress={() => {
@@ -23,10 +24,10 @@ const TodoCard: React.FC<item> = ({ title, listType, isFav, id, navigation }) =>
 				<FontAwesome name="circle-thin" size={28} color="#868a8f" />
 				<View style={styles.textsContainter}>
 					<Text style={styles.todoTitle}> {title} </Text>
-					<Text style={styles.todoType}> { listType } </Text>
+					{ listType &&  <Text style={styles.todoType}> { listType } </Text> }
 				</View>
 			</View>
-			<FontAwesome name="star" size={28} color={isFav === 1 ? "red" : "#ccc"} onPress={() => {
+			<FontAwesome name="star" size={28} color={isFav === 1 ? color : "#ccc"} onPress={() => {
 				toggleImportant(id, +(!isFav) )
 			}} />
 		</TouchableOpacity>
@@ -44,9 +45,11 @@ const styles = StyleSheet.create({
 	},
 	todoTexts: {
 		flexDirection: 'row',
+		justifyContent: "center",
+		alignItems: "center"
 	},
 	textsContainter: {
-		paddingHorizontal: 8,
+		paddingHorizontal: 12,
 	},
 	todoTitle: {
 		fontFamily: 'Roboto-Regular',
