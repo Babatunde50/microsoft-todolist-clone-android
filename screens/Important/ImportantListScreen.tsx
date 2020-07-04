@@ -74,7 +74,7 @@ function MyDayScreen ({ route, navigation }: MyDayProps)  {
 					<Text style={styles.title}> Important </Text>
 					<FlatList
 						data={myDayTodos}
-						renderItem={({ item }) => <TodoCard title={item.title} id={+item.id} isFav={item.important} listType={`${item.listType} - ${item.screen !== "tasks" && item.screen ? item.screen : "" } `} navigation={navigation} />}
+						renderItem={({ item }) => <TodoCard title={item.title} id={+item.id} isFav={item.important} listType={`${item.listType}`} navigation={navigation} />}
 						keyExtractor={(item) => item.id}
 					/>
 					<FabButton style={{ backgroundColor: "#eb3434" }} onPress={addTaskShow}>

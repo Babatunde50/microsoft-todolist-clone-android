@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Text, StyleSheet, ImageBackground, TouchableWithoutFeedback, FlatList, View, ScrollView } from 'react-native';
+import { Text, StyleSheet, TouchableWithoutFeedback, FlatList, View, ScrollView } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 
 import FabButton from '../../components/FabButton';
@@ -70,7 +70,7 @@ function MyDayScreen ({ route, navigation }: MyDayProps)  {
 	}, [todos]);
 	return (
 		<TouchableWithoutFeedback style={styles.screen} onPress={cancelAllShows}>
-				<ScrollView style={styles.container}>
+				<View style={styles.container}>
 					<Text style={styles.title}> Tasks </Text>
 					<FlatList
 						data={myDayTodos}
@@ -113,7 +113,7 @@ function MyDayScreen ({ route, navigation }: MyDayProps)  {
 						showReminderHandler={reminderShow}
 						showRepeatHandler={repeatShow}
 					/>
-				</ScrollView>
+				</View>
 		</TouchableWithoutFeedback>
 	);
 };

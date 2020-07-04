@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
 import { TodoListContext, todoContext } from '../providers/TodoList';
-import { MyDayNavigationProp } from '../navigation/TodoNavigation'
+// import { MyDayNavigationProp } from '../navigation/TodoNavigation'
 
 type item = {
 	title: string;
@@ -11,7 +11,7 @@ type item = {
 	isFav: number;
 	listType?: string;
 	color?: string
-	navigation: MyDayNavigationProp
+	navigation: any
 };
 
 const TodoCard: React.FC<item> = ({ title, listType, isFav, id, navigation, color="red" }) => {
