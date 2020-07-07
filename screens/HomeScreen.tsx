@@ -5,6 +5,7 @@ import { Entypo, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import TaskListButton from '../components/TaskListButton';
 import Modal from '../components/Modal';
 import MyButton from '../components/MyButton';
+import Group from '../components/Group';
 import { TodoListContext, todoContext } from '../providers/TodoList';
 import { HomeProps } from '../navigation/TodoNavigation';
 
@@ -13,7 +14,7 @@ function HomeScreen({ route, navigation }: HomeProps) {
 	const [groupName, setGroupName] = useState('');
 	const [showModal, setShowModal] = useState(false);
 	let disabled = groupName.length < 1 ? true : false;
-	console.log(todosDB.todos)
+	console.log(todosDB.groups)
 	return (
 		<View style={styles.screen}>
 			<Modal isOpen={showModal}>
@@ -35,7 +36,10 @@ function HomeScreen({ route, navigation }: HomeProps) {
 						<Text> CANCEL </Text>
 					</MyButton>
 					<MyButton disabled={disabled} style={{ opacity: disabled ? 0.2 : 1 }}>
-						<Text> CREATE GROUP </Text>
+						<Text style={styles.createGroupText} onPress={() => {
+							todosDB.addGroup(groupName)
+							setShowModal(false)
+						}}>  CREATE GROUP </Text>
 					</MyButton>
 				</View>
 			</Modal>
@@ -91,6 +95,12 @@ function HomeScreen({ route, navigation }: HomeProps) {
 			</View>
 			<View style={styles.tasksList}>
 				<View style={styles.list}>
+					<FlatList 
+						data={todosDB.groups}
+						renderItem={({ item }) => (
+							<Group title={item.title} id={item.id} />
+						)}
+					/>
 					<FlatList
 						data={todosDB.lists}
 						renderItem={({ item }) => (
@@ -99,6 +109,7 @@ function HomeScreen({ route, navigation }: HomeProps) {
 								iconName="menu"
 								iconSize={15}
 								iconColor={item.color}
+								totalItems={todosDB.todos.filter(todo => todo.listType === item.title).length.toString()}
 								onPress={() => {
 									navigation.navigate('NewList', { listName: item.title, newList: false})
 								}}
@@ -174,6 +185,9 @@ const styles = StyleSheet.create({
 	},
 	addNewGroup: {
 		padding: 5,
+	},
+	createGroupText: {
+		color: "#0413bf"
 	},
 	headerContainer: {
 		flexDirection: 'row',
