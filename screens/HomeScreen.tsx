@@ -6,7 +6,7 @@ import TaskListButton from '../components/TaskListButton';
 import Modal from '../components/Modal';
 import MyButton from '../components/MyButton';
 import Group from '../components/Group';
-import { TodoListContext, todoContext } from '../providers/TodoList';
+import { TodoListContext, todoContext, group, list } from '../providers/TodoList';
 import { HomeProps } from '../navigation/TodoNavigation';
 
 function HomeScreen({ route, navigation }: HomeProps) {
@@ -14,7 +14,8 @@ function HomeScreen({ route, navigation }: HomeProps) {
 	const [groupName, setGroupName] = useState('');
 	const [showModal, setShowModal] = useState(false);
 	let disabled = groupName.length < 1 ? true : false;
-	console.log(todosDB.groups)
+	const lists = [...todosDB.groups, ...todosDB.lists] as any
+	console.log(lists, "FROM HOME SCREEN")
 	return (
 		<View style={styles.screen}>
 			<Modal isOpen={showModal}>
@@ -96,25 +97,23 @@ function HomeScreen({ route, navigation }: HomeProps) {
 			<View style={styles.tasksList}>
 				<View style={styles.list}>
 					<FlatList 
-						data={todosDB.groups}
-						renderItem={({ item }) => (
-							<Group title={item.title} id={item.id} />
-						)}
-					/>
-					<FlatList
-						data={todosDB.lists}
-						renderItem={({ item }) => (
-							<TaskListButton
-								title={item.title}
-								iconName="menu"
-								iconSize={15}
-								iconColor={item.color}
-								totalItems={todosDB.todos.filter(todo => todo.listType === item.title).length.toString()}
-								onPress={() => {
-									navigation.navigate('NewList', { listName: item.title, newList: false})
-								}}
+						data={lists}
+						renderItem={({ item }) => {
+							if(item.color) {
+								return <TaskListButton
+									title={item.title}
+									iconName="menu"
+									iconSize={15}
+									iconColor={item.color}
+									totalItems={todosDB.todos.filter(todo => todo.listType === item.title).length.toString()}
+									onPress={() => {
+										navigation.navigate('NewList', { listName: item.title, newList: false})
+									}}
 							/>
-						)}
+							} 
+							return <Group title={item.title} id={item.id } navigation={navigation} />
+							
+						}}
 						keyExtractor={(item) => item.id.toString()}
 					/>
 				</View>

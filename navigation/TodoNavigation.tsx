@@ -13,7 +13,7 @@ import HomeScreen, { HomeHeaderTitle } from '../screens/HomeScreen';
 import NewListScreen from '../screens/NewList/NewListScreen';
 import TodoDetailScreen from '../screens/TodoDetailsScreen';
 
-type RootStackParamList = {
+export type RootStackParamList = {
 	Home: undefined;
 	Assign: undefined;
 	Important: undefined;

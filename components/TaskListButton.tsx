@@ -1,22 +1,26 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { Feather, AntDesign } from '@expo/vector-icons';
 
-const TaskListButton: React.FC<{ totalItems?: string,  title: string; iconName: string; iconSize: number; iconColor: string, onPress: () => void  }> = ({
+const TaskListButton: React.FC<{ icon?: string, totalItems?: string,  title: string; iconName: string; iconSize: number; iconColor: string, onPress: () => void  }> = ({
 	title,
 	iconName,
 	iconSize,
 	iconColor,
 	totalItems,
+	icon,
     onPress
 }) => {
+	console.log(icon)
 	return (
 		<TouchableOpacity style={styles.container} activeOpacity={0.6} onPress={onPress}>
 			<View style={styles.button}>
                 <Feather name={iconName} size={iconSize} color={iconColor} />
 				<Text style={styles.buttonText}>{title}</Text>
 			</View>
-			<Text style={styles.text}> { totalItems !== "0" && totalItems } </Text> 
+			{
+				icon ? <AntDesign name={icon} size={15} color="#0b168a" />  : <Text style={styles.text}> { totalItems !== "0" && totalItems } </Text>
+			} 
 		</TouchableOpacity>
 	);
 };

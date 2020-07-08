@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 
-const ModalCmp: React.FC<{isOpen: boolean, children: React.JSX }> = ({ isOpen, children }) => {
+const ModalCmp: React.FC<{isOpen: boolean, children: React.ReactChild }> = ({ isOpen, children }) => {
 	return (
 			<Modal
 				animationType="slide"
