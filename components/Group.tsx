@@ -7,7 +7,7 @@ import {
   FlatList,
   TextInput,
 } from "react-native";
-import { Feather, AntDesign } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/TodoNavigation";
 
@@ -25,9 +25,12 @@ const Group: React.FC<{
   const [clicked, setClicked] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
   const [showModal, setShowModal] = useState({ show: false, type: "" });
+  const [groupName, setGroupName] = useState(title)
   const todoDB = useContext(TodoListContext) as todoContext;
 
-  const groupList = todoDB.lists; //.filter((list) => list.groupId === id)
+  const groupList = todoDB.lists.filter((list) => list.groupId === id)
+  const ungroupAndGroupList = todoDB.lists.filter((list) => list.groupId === id || !list.groupId )
+  let disabled = groupName.length < 1 ? true : false;
 
   return (
     <TouchableOpacity
@@ -98,6 +101,7 @@ const Group: React.FC<{
         </ScrollView>
       )}
       {showOptions && (
+        
         <View style={styles.actionsContainer}>
           <TaskListButton
             title="Add/Remove lists"
@@ -120,12 +124,17 @@ const Group: React.FC<{
             }}
           />
           <TaskListButton
-            title="Ungroup lists"
-            iconName="maximize"
+            title={groupList.length > 0 ? "Ungroup list" : "Delete group" }
+            iconName={ groupList.length > 0 ? "maximize" : "trash-2" }
             iconSize={15}
             iconColor="#5e6360"
             onPress={() => {
-              // setShowModal(true);
+              if(groupList.length > 0) {
+                todoDB.listUngroup(id);
+              } else {
+                todoDB.deleteGroup(id);
+              }
+              setShowOptions(false);
             }}
           />
         </View>
@@ -136,8 +145,11 @@ const Group: React.FC<{
             {" "}
             Select lists to add or remove
           </Text>
+          {
+            ungroupAndGroupList.length === 0 && <Text style={styles.notFound}> No List found </Text>
+          }
           <FlatList
-            data={groupList}
+            data={ungroupAndGroupList}
             renderItem={({ item }) => {
               return (
                 <TaskListButton
@@ -145,15 +157,14 @@ const Group: React.FC<{
                   iconName="menu"
                   iconSize={15}
                   iconColor={item.color}
-                  totalItems={todoDB.todos
-                    .filter((todo) => todo.listType === item.title)
-                    .length.toString()}
-                  icon="check"
+                  icon={item.groupId === id ? "check" : "plus"}
                   onPress={() => {
-                    navigation.navigate("NewList", {
-                      listName: item.title,
-                      newList: false,
-                    });
+                    if(item.groupId === id) {
+                      todoDB.removeListGroup(item.id)
+                    } else {
+                      todoDB.addListGroup(id, item.id)
+                    }
+                    console.log(todoDB.lists)
                   }}
                 />
               );
@@ -166,10 +177,7 @@ const Group: React.FC<{
                 setShowModal((prev) => ({ ...prev, show: false }));
               }}
             >
-              <Text> CANCEL </Text>
-            </MyButton>
-            <MyButton onPress={() => {}}>
-              <Text onPress={() => {}}> SELECT </Text>
+              <Text> DONE </Text>
             </MyButton>
           </View>
         </View>
@@ -178,8 +186,8 @@ const Group: React.FC<{
         <View>
           <Text> Rename </Text>
           <TextInput
-            // value={groupName}
-            // onChangeText={(text) => setGroupName(text)}
+            value={groupName}
+            onChangeText={(text) => setGroupName(text)}
             placeholder="Name this group"
             placeholderTextColor="#ccc"
             style={styles.modalInput}
@@ -193,8 +201,11 @@ const Group: React.FC<{
             >
               <Text> CANCEL </Text>
             </MyButton>
-            <MyButton onPress={() => {}}>
-              <Text onPress={() => {}}> SELECT </Text>
+            <MyButton disabled={disabled} style={{ opacity: disabled ? 0.2 : 1 }} onPress={ () => { 
+              todoDB.editGroup(groupName, id)
+              setShowModal((prev) => ({ ...prev, show: false }));
+              } }>
+              <Text> RENAME </Text>
             </MyButton>
           </View>
         </View>
@@ -279,6 +290,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     paddingLeft: 6,
   },
+  notFound: {
+    fontSize: 12,
+    paddingVertical: 12,
+    fontFamily: "Roboto-Regular",
+    textAlign: "center"
+  }
 });
 
 export default Group;

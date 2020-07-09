@@ -1,7 +1,7 @@
 import * as SQLite from "expo-sqlite";
 import { SQLResultSet } from "expo-sqlite";
 
-const db = SQLite.openDatabase("test.db");
+const db = SQLite.openDatabase("tests.db");
 import { repeatOptions } from "../utils/notification";
 
 export const init = () => {
@@ -95,19 +95,35 @@ export const addNewList = (title: string, color: string) => {
 };
 
 export const addNewGroup = (title: string) => {
-	const promise = new Promise((resolve, reject) => {
-		db.transaction((tx) => {
-			tx.executeSql(
-				"INSERT INTO groups (title) VALUES (?)",
-				[title],
-				(_, result) => {
-					resolve(result)
-				}
-			)
-		})
-	})
-	return promise;
-}
+  const promise = new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "INSERT INTO groups (title) VALUES (?)",
+        [title],
+        (_, result) => {
+          resolve(result);
+        }
+      );
+    });
+  });
+  return promise;
+};
+
+export const editGroupTitle = (title: string, id: number) => {
+  const promise = new Promise((resolve, reject) => {
+    db.transaction((tx: SQLTransaction) => {
+      tx.executeSql(
+        "UPDATE groups SET title = ? WHERE id = ?",
+        [title, id],
+        (_, result: SQLResultSet) => {
+          resolve(result);
+        }
+      );
+    });
+  });
+  return promise;
+};
+
 
 export const fetchTodos = () => {
   const promise = new Promise((resolve, reject) => {
@@ -119,6 +135,51 @@ export const fetchTodos = () => {
   });
   return promise;
 };
+
+export const fetchGroups = () => {
+  const promise = new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql("SELECT * FROM groups", [], (_, result) => {
+        resolve(result);
+      });
+    });
+  });
+  return promise;
+};
+
+export const removeGroup = (id: number) => {
+  const promise = new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql("DELETE FROM groups WHERE id = ?",
+      [id],
+      (_, result: SQLResultSet) => {
+        resolve(result)
+      }
+      )
+    })
+  })
+  return promise;
+}
+
+export const ungroupList = async (groupId: number) => {
+  await removeGroup(groupId);
+  const promise = new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "UPDATE lists SET groupId = ? WHERE groupId = ?",
+        [null, groupId],
+        (_, result: SQLResultSet) => {
+          resolve(result)
+        },
+        (_, err: SQLError) => {
+          reject(err);
+          return true
+        }
+        )
+    })
+  })
+  return promise;
+}
 
 export const toggleFavouriteTodo = (important: number, id: number) => {
   const promise = new Promise((resolve, reject) => {
@@ -145,3 +206,41 @@ export const fetchLists = () => {
   });
   return promise;
 };
+
+export const addListToGroup = (listId: number, groupId: number) => {
+  const promise = new Promise((resolve, reject) => {
+    db.transaction((tx: SQLTransaction) => {
+      tx.executeSql(
+        "UPDATE lists SET groupId = ? WHERE id = ?",
+        [groupId, listId],
+        (_, result: SQLResultSet) => {
+          resolve(result)
+        },
+        (_, err: SQLError) => {
+          reject(err);
+          return true
+        }
+      )
+    })
+  })
+  return promise;
+}
+
+export const removeListFromGroup = (listId: number) => {
+  const promise = new Promise((resolve, reject) => {
+    db.transaction((tx: SQLTransaction) => {
+      tx.executeSql(
+        "UPDATE lists SET groupId = ? WHERE id = ?",
+        [null, listId],
+        (_, result: SQLResultSet) => {
+          resolve(result)
+        },
+        (_, err: SQLError) => {
+          reject(err);
+          return true
+        }
+      )
+    })
+  })
+  return promise;
+}

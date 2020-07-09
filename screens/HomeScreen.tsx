@@ -6,7 +6,7 @@ import TaskListButton from '../components/TaskListButton';
 import Modal from '../components/Modal';
 import MyButton from '../components/MyButton';
 import Group from '../components/Group';
-import { TodoListContext, todoContext, group, list } from '../providers/TodoList';
+import { TodoListContext, todoContext } from '../providers/TodoList';
 import { HomeProps } from '../navigation/TodoNavigation';
 
 function HomeScreen({ route, navigation }: HomeProps) {
@@ -14,7 +14,7 @@ function HomeScreen({ route, navigation }: HomeProps) {
 	const [groupName, setGroupName] = useState('');
 	const [showModal, setShowModal] = useState(false);
 	let disabled = groupName.length < 1 ? true : false;
-	const lists = [...todosDB.groups, ...todosDB.lists] as any
+	const lists = [...todosDB.groups, ...todosDB.lists.filter(list => !list.groupId )] as any
 	console.log(lists, "FROM HOME SCREEN")
 	return (
 		<View style={styles.screen}>
@@ -106,7 +106,7 @@ function HomeScreen({ route, navigation }: HomeProps) {
 									iconSize={15}
 									iconColor={item.color}
 									totalItems={todosDB.todos.filter(todo => todo.listType === item.title).length.toString()}
-									onPress={() => {
+									onPress={ () => {
 										navigation.navigate('NewList', { listName: item.title, newList: false})
 									}}
 							/>

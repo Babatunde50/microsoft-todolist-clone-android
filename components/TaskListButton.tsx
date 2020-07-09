@@ -13,13 +13,15 @@ const TaskListButton: React.FC<{ icon?: string, totalItems?: string,  title: str
 }) => {
 	console.log(icon)
 	return (
-		<TouchableOpacity style={styles.container} activeOpacity={0.6} onPress={onPress}>
+		<TouchableOpacity style={styles.container} activeOpacity={0.6} onPress={() => {
+			onPress()
+		}}>
 			<View style={styles.button}>
                 <Feather name={iconName} size={iconSize} color={iconColor} />
 				<Text style={styles.buttonText}>{title}</Text>
 			</View>
 			{
-				icon ? <AntDesign name={icon} size={15} color="#0b168a" />  : <Text style={styles.text}> { totalItems !== "0" && totalItems } </Text>
+				(icon || totalItems) && icon ? <AntDesign name={icon} size={15} color="#0b168a" />  : <Text style={styles.text}> { totalItems !== "0" && totalItems } </Text>
 			} 
 		</TouchableOpacity>
 	);
