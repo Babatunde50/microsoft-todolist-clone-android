@@ -1,22 +1,35 @@
-import React, { useContext } from 'react';
-import { Text, View, StyleSheet, TextInput, ScrollView, KeyboardAvoidingView } from 'react-native';
+import React, { useContext, useState, useEffect } from 'react';
+import { Text, View, StyleSheet, TextInput, ScrollView, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
 import { FontAwesome, Feather, AntDesign, Entypo, MaterialIcons } from '@expo/vector-icons';
 
 import { TodoListContext, todoContext } from '../providers/TodoList';
 import { TodoDetailsProp } from '../navigation/TodoNavigation';
 
 function TodoDetailsScreen({ route, navigation }: TodoDetailsProp) {
-	const { todos } = useContext(TodoListContext) as todoContext;
+	const { todos, toggleImportant, toggleMyDayTodo, todoTitleEdit  } = useContext(TodoListContext) as todoContext;
 	const { id } = route.params;
 	const foundTodo = todos.find((todo) => todo.id === id);
+	const [todoTitle, setTodoTitle] = useState(foundTodo?.title); 
+
+	const handleTitleChange = (text: string) => {
+		setTodoTitle(text);
+		todoTitleEdit(id, text)	
+	}
+
+	// useEffect(() => {
+	// 	editTodoTitle(id, "New Title")
+	// }, [])
+
 	return (
 		<KeyboardAvoidingView style={styles.screen}>
 			<View style={styles.header}>
 				<View style={styles.input}>
 					<FontAwesome name="circle-thin" size={35} color="#868a8f" />
-					<TextInput value={foundTodo?.title} onChangeText={(text) => ''} style={styles.textInput} />
+					<TextInput value={todoTitle} onChangeText={handleTitleChange} style={styles.textInput} />
 				</View>
-				<FontAwesome name="star" size={28} color={foundTodo?.important === 1 ? 'red' : '#ccc'} />
+				<FontAwesome name="star" size={28} color={foundTodo?.important === 1 ? 'red' : '#ccc'} onPress={() => {
+					toggleImportant(id, +(!foundTodo?.important) )
+				}} />
 			</View>
 			<ScrollView>
 				<View style={styles.stepList}>
@@ -30,14 +43,21 @@ function TodoDetailsScreen({ route, navigation }: TodoDetailsProp) {
 						</View>
 					))}
                     <View style={styles.nextStep}>
-                        <AntDesign name="plus" size={24} color="#250387" />
+                        <AntDesign name="plus" size={24} color="#4267e3" />
                         <Text style={styles.nextStepText}>Next step</Text>
                     </View>
 				</View>
-				<View style={styles.addToDay}>
-					<Feather name="sun" size={24} color="black" />
-					<Text style={styles.addToDayText} >Add to My Day</Text>
-				</View>
+				<TouchableOpacity underlayColor="#ccc"  onPress={() => {
+					const screen = foundTodo?.screen !== "myDay" ? "myDay" : "tasks"
+					toggleMyDayTodo(id, screen)
+				}}>
+					<View style={styles.addToDay}>
+						<Feather name="sun" size={24} color={foundTodo?.screen === "myDay" ? "#4267e3" : "black"} />
+						<Text style={ {...styles.addToDayText, color: foundTodo?.screen === "myDay" ? "#4267e3" : "#2c2f33" } } >
+							{ foundTodo?.screen === "myDay" ? "Added to My Day" : "Add to My Day" }
+						</Text>
+					</View>
+				</TouchableOpacity>
 				<View style={styles.time}>
 					<View style={styles.timeItem}>
 						<AntDesign name="bells" size={24} color="black" />
@@ -131,7 +151,7 @@ const styles = StyleSheet.create({
 		marginBottom: 2
     },
     nextStepText: {
-        color: "#250387",
+        color: "#4267e3",
         paddingHorizontal: 10,
         fontFamily: "Roboto-Regular",
         fontSize: 16,

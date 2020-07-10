@@ -12,7 +12,12 @@ import {
   removeGroup,
   addListToGroup,
   removeListFromGroup,
-  ungroupList
+  ungroupList,
+  toggleTodoToMyDay,
+  editTodoDueDate,
+  editTodoReminder,
+  editTodoRepeat,
+  editTodoTitle,
 } from "../utils/db";
 import { createEventDueDate } from "../utils/calendars";
 import { createNewReminder, repeatOptions } from "../utils/notification";
@@ -64,6 +69,8 @@ export type todoContext = {
   addListGroup: (groupId: number, listId: number) => void;
   removeListGroup: (listId: number) => void;
   listUngroup: (groupId: number) => void;
+  todoTitleEdit: (id: number, title: string) => void;
+  toggleMyDayTodo: (id: number, screen: string) => void;
   // deleteTodo: (id: number) => void;
   // deleteList: (id: number) => void;
 };
@@ -145,11 +152,23 @@ const TodoListProvider: React.FC = ({ children }) => {
     setGroups(copiedGroups);
   };
 
+  const todoTitleEdit = async (id: number, title: string) => {
+    try {
+      await editTodoTitle(id, title);
+      const index = todos.findIndex((todo) => todo.id === id);
+      const copiedTodos = [...todos];
+      copiedTodos[index] = { ...todos[index], title };
+      setTodos(copiedTodos);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const deleteGroup = async (id: number) => {
-	  await removeGroup(id);
-	  const filteredGroup = groups.filter(group => group.id !== id)
-	  setGroups(filteredGroup)
-  }
+    await removeGroup(id);
+    const filteredGroup = groups.filter((group) => group.id !== id);
+    setGroups(filteredGroup);
+  };
 
   const toggleImportant = async (id: number, imp: number) => {
     await toggleFavouriteTodo(imp, id);
@@ -159,48 +178,60 @@ const TodoListProvider: React.FC = ({ children }) => {
     setTodos(copiedTodos);
   };
 
-  const addListGroup = async (groupId: number, listId: number) => {
-	  try {
-		await addListToGroup(listId, groupId)
-		const index = lists.findIndex(list => list.id === listId);
-		const copiedLists = [...lists];
-		copiedLists[index] = { ...lists[index], groupId }
-		setLists(copiedLists)
-		console.log(copiedLists)
-	  } catch(err) {
-		  console.log(err)
-	  }
+  const toggleMyDayTodo = async (id: number, screen: string) => {
+    try {
+      await toggleTodoToMyDay(id, screen)
+      const index = todos.findIndex((todo) => todo.id === id);
+      const copiedTodos = [...todos];
+      copiedTodos[index] = { ...todos[index], screen };
+      setTodos(copiedTodos);
+    } catch(err) {
+      console.log(err)
+    }
   }
+
+  const addListGroup = async (groupId: number, listId: number) => {
+    try {
+      await addListToGroup(listId, groupId);
+      const index = lists.findIndex((list) => list.id === listId);
+      const copiedLists = [...lists];
+      copiedLists[index] = { ...lists[index], groupId };
+      setLists(copiedLists);
+      console.log(copiedLists);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const removeListGroup = async (listId: number) => {
-	  try {
-		await removeListFromGroup(listId)
-		const index = lists.findIndex(list => list.id === listId);
-		const copiedLists = [...lists];
-		copiedLists[index] = { ...lists[index], groupId: undefined }
-		setLists(copiedLists)
-		console.log(copiedLists)
-	  } catch(err) {
-		console.log(err)
-	  }
-  }
+    try {
+      await removeListFromGroup(listId);
+      const index = lists.findIndex((list) => list.id === listId);
+      const copiedLists = [...lists];
+      copiedLists[index] = { ...lists[index], groupId: undefined };
+      setLists(copiedLists);
+      console.log(copiedLists);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const listUngroup = async (groupId: number) => {
-	  try {
-		await ungroupList(groupId);
-		const newList = lists.map(list => {
-			if(list.groupId === groupId) {
-				list.groupId = undefined;
-			}
-			return list;
-		});
-		const filteredGroup = groups.filter(group => group.id !== groupId)
-		setLists(newList);
-		setGroups(filteredGroup);
-	  } catch(err) {
-		  console.log(err);
-	  }
-  }
+    try {
+      await ungroupList(groupId);
+      const newList = lists.map((list) => {
+        if (list.groupId === groupId) {
+          list.groupId = undefined;
+        }
+        return list;
+      });
+      const filteredGroup = groups.filter((group) => group.id !== groupId);
+      setLists(newList);
+      setGroups(filteredGroup);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -222,12 +253,14 @@ const TodoListProvider: React.FC = ({ children }) => {
         addTodo,
         addList,
         toggleImportant,
-		addGroup,
-		editGroup,
-		deleteGroup,
-		addListGroup,
-		removeListGroup,
-		listUngroup
+        addGroup,
+        editGroup,
+        deleteGroup,
+        addListGroup,
+        removeListGroup,
+        listUngroup,
+        todoTitleEdit,
+        toggleMyDayTodo
       }}
     >
       {children}

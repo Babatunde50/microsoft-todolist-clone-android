@@ -196,6 +196,93 @@ export const toggleFavouriteTodo = (important: number, id: number) => {
   return promise;
 };
 
+export const editTodoTitle = (id: number, title: string) => {
+  const promise = new Promise((resolve, reject) => {
+    db.transaction((tx: SQLTransaction) => {
+      tx.executeSql(
+        "UPDATE myTodos SET title = ? WHERE id = ?",
+        [title, id],
+        (_, result: SQLResultSet) => {
+          console.log(result, "EDIT TODO TITLE")
+          resolve(result);
+        },
+        (_, err: SQLError) => {
+          reject(err);
+          return true
+        }
+      );
+    });
+  });
+  return promise;
+};
+
+export const editTodoRepeat = (id: number, repeat: repeatOptions) => {
+  const promise = new Promise((resolve, reject) => {
+    db.transaction((tx: SQLTransaction) => {
+      tx.executeSql(
+        "UPDATE myTodos SET repeat = ? WHERE id = ?",
+        [repeat, id],
+        (_, result: SQLResultSet) => {
+          resolve(result);
+        }
+      );
+    });
+  });
+  return promise;
+};
+
+export const editTodoReminder = (id: number, reminder: string, reminderDateId: number) => {
+  const promise = new Promise((resolve, reject) => {
+    db.transaction((tx: SQLTransaction) => {
+      tx.executeSql(
+        "UPDATE myTodos SET reminder = ? reminderDateId = ? WHERE id = ?",
+        [reminder, reminderDateId, id ],
+        (_, result: SQLResultSet) => {
+          resolve(result);
+        }
+      );
+    });
+  });
+  return promise;
+};
+
+export const editTodoDueDate = (id: number, dueDate: string, dueDateId: number) => {
+  const promise = new Promise((resolve, reject) => {
+    db.transaction((tx: SQLTransaction) => {
+      tx.executeSql(
+        "UPDATE myTodos SET dueDate = ? dueDateId = ? WHERE id = ?",
+        [dueDate, dueDateId, id ],
+        (_, result: SQLResultSet) => {
+          resolve(result);
+        }
+      );
+    });
+  });
+  return promise;
+};
+
+
+
+export const toggleTodoToMyDay = (id: number, screen: string) => {
+  const promise = new Promise((resolve, reject) => {
+    db.transaction((tx: SQLTransaction) => {
+      tx.executeSql(
+        "UPDATE myTodos SET screen = ? WHERE id = ?",
+        [screen, id],
+        (_, result: SQLResultSet) => {
+          console.log(result, "ADDTOMYDAYTODO")
+          resolve(result)
+        },
+        (_, err: SQLError) => {
+          reject(err);
+          return true
+        }
+      )
+    })
+  })
+  return promise;
+}
+
 export const fetchLists = () => {
   const promise = new Promise((resolve, reject) => {
     db.transaction((tx) => {

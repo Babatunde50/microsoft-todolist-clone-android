@@ -15,7 +15,7 @@ function HomeScreen({ route, navigation }: HomeProps) {
 	const [showModal, setShowModal] = useState(false);
 	let disabled = groupName.length < 1 ? true : false;
 	const lists = [...todosDB.groups, ...todosDB.lists.filter(list => !list.groupId )] as any
-	console.log(lists, "FROM HOME SCREEN")
+	// console.log(lists, "FROM HOME SCREEN")
 	return (
 		<View style={styles.screen}>
 			<Modal isOpen={showModal}>
