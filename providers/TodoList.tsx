@@ -14,6 +14,7 @@ import {
   removeListFromGroup,
   ungroupList,
   toggleTodoToMyDay,
+  addRemoveNote,
   editTodoDueDate,
   editTodoReminder,
   editTodoRepeat,
@@ -71,6 +72,7 @@ export type todoContext = {
   listUngroup: (groupId: number) => void;
   todoTitleEdit: (id: number, title: string) => void;
   toggleMyDayTodo: (id: number, screen: string) => void;
+  addNote: (id: number, note: string) => void;
   // deleteTodo: (id: number) => void;
   // deleteList: (id: number) => void;
 };
@@ -190,6 +192,18 @@ const TodoListProvider: React.FC = ({ children }) => {
     }
   }
 
+  const addNote = async (id: number, note: string) => {
+    try {
+      await addRemoveNote(id, note)
+      const index = todos.findIndex((todo) => todo.id === id);
+      const copiedTodos = [...todos];
+      copiedTodos[index] = { ...todos[index], note };
+      setTodos(copiedTodos);
+    } catch(err){
+      console.log(err);
+    }
+  }
+
   const addListGroup = async (groupId: number, listId: number) => {
     try {
       await addListToGroup(listId, groupId);
@@ -260,7 +274,8 @@ const TodoListProvider: React.FC = ({ children }) => {
         removeListGroup,
         listUngroup,
         todoTitleEdit,
-        toggleMyDayTodo
+        toggleMyDayTodo,
+        addNote
       }}
     >
       {children}
