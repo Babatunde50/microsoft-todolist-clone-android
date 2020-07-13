@@ -12,10 +12,12 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/TodoNavigation";
 
 import TaskListButton from "./TaskListButton";
-import { TodoListContext, todoContext } from "../providers/TodoList";
+import { useDispatchLists, useLists } from "../providers/List";
 import { ScrollView } from "react-native-gesture-handler";
 import Modal from "./Modal";
 import MyButton from "./MyButton";
+import { useTodos } from "../providers/Todo";
+import { useDispatchGroups } from '../providers/Group'
 
 const Group: React.FC<{
   title: string;
@@ -26,10 +28,13 @@ const Group: React.FC<{
   const [showOptions, setShowOptions] = useState(false);
   const [showModal, setShowModal] = useState({ show: false, type: "" });
   const [groupName, setGroupName] = useState(title)
-  const todoDB = useContext(TodoListContext) as todoContext;
+  const lists = useLists();
+  const listsDispatch = useDispatchLists();
+  const groupsDispatch = useDispatchGroups()
+  const todos = useTodos()
 
-  const groupList = todoDB.lists.filter((list) => list.groupId === id)
-  const ungroupAndGroupList = todoDB.lists.filter((list) => list.groupId === id || !list.groupId )
+  const groupList = lists!.filter((list) => list.groupId === id)
+  const ungroupAndGroupList = lists!.filter((list) => list.groupId === id || !list.groupId )
   let disabled = groupName.length < 1 ? true : false;
 
   return (
@@ -78,7 +83,7 @@ const Group: React.FC<{
                       iconName="menu"
                       iconSize={15}
                       iconColor={item.color}
-                      totalItems={todoDB.todos
+                      totalItems={todos!
                         .filter((todo) => todo.listType === item.title)
                         .length.toString()}
                       onPress={() => {
@@ -130,9 +135,9 @@ const Group: React.FC<{
             iconColor="#5e6360"
             onPress={() => {
               if(groupList.length > 0) {
-                todoDB.listUngroup(id);
+                listsDispatch!.listUngroup(id);
               } else {
-                todoDB.deleteGroup(id);
+                groupsDispatch!.deleteGroup(id);
               }
               setShowOptions(false);
             }}
@@ -160,11 +165,11 @@ const Group: React.FC<{
                   icon={item.groupId === id ? "check" : "plus"}
                   onPress={() => {
                     if(item.groupId === id) {
-                      todoDB.removeListGroup(item.id)
+                      listsDispatch!.removeListGroup(item.id)
                     } else {
-                      todoDB.addListGroup(id, item.id)
+                      listsDispatch!.addListGroup(id, item.id)
                     }
-                    console.log(todoDB.lists)
+                    console.log(lists)
                   }}
                 />
               );
@@ -202,7 +207,7 @@ const Group: React.FC<{
               <Text> CANCEL </Text>
             </MyButton>
             <MyButton disabled={disabled} style={{ opacity: disabled ? 0.2 : 1 }} onPress={ () => { 
-              todoDB.editGroup(groupName, id)
+              groupsDispatch!.editGroup(groupName, id)
               setShowModal((prev) => ({ ...prev, show: false }));
               } }>
               <Text> RENAME </Text>

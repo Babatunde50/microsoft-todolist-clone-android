@@ -21,7 +21,7 @@ export type RootStackParamList = {
 	Planned: undefined;
 	Tasks: undefined;
 	TodoDetails: {id: number};
-	NewList: {listName: string, newList: boolean }
+	NewList: {listName: string, newList: boolean, color: string }
   };
 
 type HomeScreenNavigationProp = StackNavigationProp<
@@ -122,10 +122,10 @@ const TodoListNavigator = () => (
 		}} />
 		<TodoListStackNavigator.Screen name="Planned" component={PlannedListScreen} />
 		<TodoListStackNavigator.Screen name="Tasks" component={TasksListScreen} />
-		<TodoListStackNavigator.Screen name="NewList" component={NewListScreen} options={{
+		<TodoListStackNavigator.Screen name="NewList" component={NewListScreen} options={( { route } ) => ( {
 			title: "",
 			headerStyle: {
-				backgroundColor: "#F44336",
+				backgroundColor: route.params.color,
 				elevation: 0
 			},
 			headerRight: () => (
@@ -134,7 +134,7 @@ const TodoListNavigator = () => (
 					<MaterialCommunityIcons name="dots-vertical" size={25} color="white" />
 				</View>
 			)
-		}} />
+		})} />
 		<TodoListStackNavigator.Screen name="TodoDetails" component={TodoDetailScreen} />
 	</TodoListStackNavigator.Navigator>
 );

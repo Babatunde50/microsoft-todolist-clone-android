@@ -2,8 +2,7 @@ import React, { useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
-import { TodoListContext, todoContext } from '../providers/TodoList';
-// import { MyDayNavigationProp } from '../navigation/TodoNavigation'
+import { useDispatchTodos } from '../providers/Todo';
 
 type item = {
 	title: string;
@@ -15,7 +14,7 @@ type item = {
 };
 
 const TodoCard: React.FC<item> = ({ title, listType, isFav, id, navigation, color="red" }) => {
-	const { toggleImportant } = useContext(TodoListContext) as todoContext;
+	const todosDispatch = useDispatchTodos()
 	return (
 		<TouchableOpacity style={styles.todoContainer} activeOpacity={0.9}  onPress={() => {
 			navigation.navigate("TodoDetails", { id })
@@ -28,7 +27,7 @@ const TodoCard: React.FC<item> = ({ title, listType, isFav, id, navigation, colo
 				</View>
 			</View>
 			<FontAwesome name="star" size={28} color={isFav === 1 ? color : "#ccc"} onPress={() => {
-				toggleImportant(id, +(!isFav) )
+				todosDispatch!.toggleImportant(id, +(!isFav) )
 			}} />
 		</TouchableOpacity>
 	);

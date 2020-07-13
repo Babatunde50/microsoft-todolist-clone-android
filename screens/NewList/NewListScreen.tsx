@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, Fragment } from "react";
 import { View, Text, StyleSheet, TextInput, FlatList } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { ColorPicker } from "react-native-status-color-picker";
@@ -17,7 +17,8 @@ import {
   repeatActions,
 } from "../../utils/days";
 
-import { TodoListContext, todoContext } from "../../providers/TodoList";
+import { useDispatchLists } from "../../providers/List";
+import { useTodos, useDispatchTodos } from '../../providers/Todo'
 import useAddTodo from "../../hooks/useAddTodo";
 
 type todoModel = {
@@ -29,12 +30,14 @@ type todoModel = {
 };
 
 function NewListScreen({ route, navigation }: NewListProp) {
-  const todoDB = useContext(TodoListContext) as todoContext;
-  const { listName, newList } = route.params;
+  const { listName, newList, color } = route.params;
   const [groupName, setGroupName] = useState("");
   const [title, setTitle] = useState(listName);
   const [showModal, setShowModal] = useState(newList);
-  const [selectedColor, setSelectedColor] = useState("#F44336");
+  const todos = useTodos();
+  const todosDispatch = useDispatchTodos();
+  const listsDispatch = useDispatchLists();
+  const [selectedColor, setSelectedColor] = useState(color);
   const {
     task,
     showAddTask,
@@ -64,10 +67,8 @@ function NewListScreen({ route, navigation }: NewListProp) {
 
   let disabled = groupName.length < 1 ? true : false;
 
-  const { todos } = todoDB;
-
   useEffect(() => {
-    const transformedTodos: todoModel[] = todos
+    const transformedTodos: todoModel[] = todos!
       .filter((todo: any) => todo.listType === title)
       .map((filteredTodo: any) => {
         const transformedTodo: todoModel = {
@@ -81,7 +82,7 @@ function NewListScreen({ route, navigation }: NewListProp) {
   }, [todos]);
 
   const addNewTask = () => {
-    todoDB.addTodo(
+    todosDispatch!.addTodo(
       task,
       title,
       0,
@@ -95,6 +96,7 @@ function NewListScreen({ route, navigation }: NewListProp) {
   return (
     <View style={{ flex: 1, backgroundColor: selectedColor }}>
       <Modal isOpen={showModal}>
+        <Fragment>
         <Text style={styles.modalTitle}> New list </Text>
         <View style={styles.inputContainer}>
           <Entypo name="emoji-happy" size={20} color={selectedColor} />
@@ -141,7 +143,7 @@ function NewListScreen({ route, navigation }: NewListProp) {
           </MyButton>
           <MyButton
             onPress={() => {
-              todoDB.addList(groupName, selectedColor);
+              listsDispatch!.addList(groupName, selectedColor);
               setShowModal(false);
               setTitle(groupName);
             }}
@@ -151,6 +153,7 @@ function NewListScreen({ route, navigation }: NewListProp) {
             <Text> CREATE LIST </Text>
           </MyButton>
         </View>
+        </Fragment>
       </Modal>
 
       <Text style={styles.title}> {title} </Text>

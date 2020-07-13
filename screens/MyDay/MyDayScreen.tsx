@@ -10,7 +10,7 @@ import TodoCard from '../../components/TodoCard';
 import { dueDateActions, remindMeActions, repeatActions } from '../../utils/days';
 
 import useAddTodo from '../../hooks/useAddTodo';
-import { TodoListContext, todoContext } from '../../providers/TodoList';
+import { useDispatchTodos, useTodos } from '../../providers/Todo';
 import { MyDayProps } from '../../navigation/TodoNavigation';
 
 type todoModel = {
@@ -48,16 +48,18 @@ function MyDayScreen ({ route, navigation }: MyDayProps)  {
 		repeatType,
 	} = useAddTodo();
 	const todayDate = new Date().toString().split(' ');
-	const { todos, addTodo } = useContext(TodoListContext) as todoContext;
+	const todos = useTodos();
+	const todosDispatch = useDispatchTodos()
+
 	const [myDayTodos, setMyDayTodo] = useState<null | todoModel[]>(null);
 
 	const addNewTask = () => {
-		addTodo(task, 'myDay', 0, 'tasks', reminderDate?.toString(), dueDate?.toString(), repeatType);
+		todosDispatch!.addTodo(task, 'myDay', 0, 'tasks', reminderDate?.toString(), dueDate?.toString(), repeatType);
 		cancelAllShows();
 	};
 
 	useEffect(() => {
-		const transformedTodos: todoModel[] = todos
+		const transformedTodos: todoModel[] = todos!
 			.filter((todo: any) => todo.screen === 'myDay')
 			.map((filteredTodo: any) => {
 				const transformedTodo: todoModel = {

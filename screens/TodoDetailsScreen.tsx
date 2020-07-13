@@ -7,6 +7,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   TouchableOpacity,
+  Platform
 } from "react-native";
 import {
   FontAwesome,
@@ -16,34 +17,36 @@ import {
   MaterialIcons,
 } from "@expo/vector-icons";
 
-import { TodoListContext, todoContext } from "../providers/TodoList";
 import { TodoDetailsProp } from "../navigation/TodoNavigation";
+import { useDispatchTodos, useTodos } from '../providers/Todo'
 
 function TodoDetailsScreen({ route, navigation }: TodoDetailsProp) {
-  const {
-    todos,
-    toggleImportant,
-    toggleMyDayTodo,
-    todoTitleEdit,
-    addNote,
-  } = useContext(TodoListContext) as todoContext;
+  const dispatchTodo = useDispatchTodos()
+  const todos = useTodos()
+  // const {
+  //   todos,
+  //   toggleImportant,
+  //   toggleMyDayTodo,
+  //   todoTitleEdit,
+  //   addNote,
+  // } = useContext(TodoListContext) as todoContext;
   const { id } = route.params;
-  const foundTodo = todos.find((todo) => todo.id === id);
+  const foundTodo = todos!.find((todo) => todo.id === id);
   const [todoTitle, setTodoTitle] = useState(foundTodo?.title);
   const [step, setStep] = useState("")
 
   const handleTitleChange = (text: string) => {
     setTodoTitle(text);
-    todoTitleEdit(id, text);
+    dispatchTodo!.todoTitleEdit(id, text);
   };
 
   const handleStepChange = (text: string) => {
 	  setStep(text)
-	  addNote
+	  dispatchTodo!.addNote
   }
 
   return (
-    <KeyboardAvoidingView style={styles.screen}>
+    <KeyboardAvoidingView style={styles.screen} behavior={Platform.OS == "ios" ? "padding" : "height"}>
       <View style={styles.header}>
         <View style={styles.input}>
           <FontAwesome name="circle-thin" size={35} color="#868a8f" />
@@ -58,7 +61,7 @@ function TodoDetailsScreen({ route, navigation }: TodoDetailsProp) {
           size={28}
           color={foundTodo?.important === 1 ? "red" : "#ccc"}
           onPress={() => {
-            toggleImportant(id, +!foundTodo?.important);
+            dispatchTodo!.toggleImportant(id, +!foundTodo?.important);
           }}
         />
       </View>
@@ -91,7 +94,7 @@ function TodoDetailsScreen({ route, navigation }: TodoDetailsProp) {
         <TouchableOpacity
           onPress={() => {
             const screen = foundTodo?.screen !== "myDay" ? "myDay" : "tasks";
-            toggleMyDayTodo(id, screen);
+            dispatchTodo!.toggleMyDayTodo(id, screen);
           }}
         >
           <View style={styles.addToDay}>
