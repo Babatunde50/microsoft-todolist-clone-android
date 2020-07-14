@@ -33,6 +33,7 @@ function TodoDetailsScreen({ route, navigation }: TodoDetailsProp) {
   const { id } = route.params;
   const foundTodo = todos!.find((todo) => todo.id === id);
   const [todoTitle, setTodoTitle] = useState(foundTodo?.title);
+  const [note, setNote] = useState(foundTodo?.note)
   const [step, setStep] = useState("")
 
   const handleTitleChange = (text: string) => {
@@ -40,9 +41,13 @@ function TodoDetailsScreen({ route, navigation }: TodoDetailsProp) {
     dispatchTodo!.todoTitleEdit(id, text);
   };
 
+  const handleNoteChange = (text: string) => {
+    setNote(text);
+    dispatchTodo!.addNote(id, text)
+  }
+
   const handleStepChange = (text: string) => {
-	  setStep(text)
-	  dispatchTodo!.addNote
+	  // setStep(text)
   }
 
   return (
@@ -143,6 +148,8 @@ function TodoDetailsScreen({ route, navigation }: TodoDetailsProp) {
           {/* <Text> Cool... </Text> */}
           <TextInput
             style={styles.noteText}
+            onChangeText={handleNoteChange}
+            value={note}
             multiline={true}
             numberOfLines={2}
             placeholder="Add note"
@@ -151,7 +158,10 @@ function TodoDetailsScreen({ route, navigation }: TodoDetailsProp) {
       </ScrollView>
       <View style={styles.dateCreatedContainer}>
         <Text> Created on {foundTodo?.createdAt?.slice(0, 10)} </Text>
-        <AntDesign name="delete" size={24} color="black" />
+        <AntDesign name="delete" size={24} color="black" onPress={() => {
+          dispatchTodo!.removeTodo(id)
+          navigation.goBack()
+        }} />
       </View>
     </KeyboardAvoidingView>
   );

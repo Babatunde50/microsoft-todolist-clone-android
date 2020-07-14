@@ -148,8 +148,6 @@ export const addNewTodo = (
     return promise;
   };
   
-  
-  
   export const toggleTodoToMyDay = (id: number, screen: string) => {
     const promise = new Promise((resolve, reject) => {
       db.transaction((tx: SQLTransaction) => {
@@ -189,3 +187,21 @@ export const addNewTodo = (
     return promise;
   }
   
+  export const deleteTodo = (id: number) => {
+    const promise = new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+        tx.executeSql(
+          "DELETE FROM myTodos WHERE id = ?",
+          [id],
+          (_, result: SQLResultSet) => {
+            resolve(result);
+          },
+          (_, err: SQLError) => {
+            reject(err);
+            return true;
+          }
+        );
+      });
+    });
+    return promise;
+  };

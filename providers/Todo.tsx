@@ -2,13 +2,14 @@ import React, { createContext, useEffect, useReducer, useContext } from "react";
 
 import { createNewReminder, repeatOptions } from "../utils/notification";
 import { createEventDueDate } from "../utils/calendars";
-import { addNewTodo, editTodoTitle, toggleFavouriteTodo, addRemoveNote, toggleTodoToMyDay, fetchTodos } from '../utils/DB/todos'
+import { addNewTodo, editTodoTitle, toggleFavouriteTodo, addRemoveNote, toggleTodoToMyDay, fetchTodos, deleteTodo } from '../utils/DB/todos'
 import getEdittedState from '../utils/editState'
 
 const ADD_TODO = "ADD_TODO"
 const ERROR = "SET_ERROR";
 const EDIT = "EDIT_TODO";
 const LOAD_TODOS = "LOAD_TODOS"
+const DELETE_TODO = "DELETE_TODO"
 
 type Action =
   | {
@@ -18,6 +19,7 @@ type Action =
   | { type: "SET_ERROR", payload: { message: string} }
   | { type: "EDIT_TODO", payload: TodoState }
   | { type: "LOAD_TODOS", payload: TodoState}
+  | { type: "DELETE_TODO", payload: { id: number }}
 
 export interface todo {
     id: number;
@@ -48,6 +50,7 @@ type TodoActions = {
     todoTitleEdit: (id: number, title: string) => void;
     toggleMyDayTodo: (id: number, screen: string) => void;
     addNote: (id: number, note: string) => void;
+    removeTodo: (id: number) => void;
 }
 
 const TodoStateContext = createContext<TodoState | null>(null)
@@ -61,6 +64,8 @@ const reducer = (state: TodoState, action: Action): TodoState => {
             return action.payload;
         case LOAD_TODOS:
             return action.payload;
+        case DELETE_TODO:
+            return state.filter(todo => todo.id !== action.payload.id)
         case ERROR:
             console.log(action.payload.message) 
             return state;
@@ -121,6 +126,7 @@ const TodoProvider: React.FunctionComponent = ({ children }) => {
             dueDate,
             repeat,
             screen,
+            createdAt: new Date().toString()
           };
           dispatch({ type: ADD_TODO, payload: insertedTodo })
         } catch (err) {
@@ -163,9 +169,18 @@ const TodoProvider: React.FunctionComponent = ({ children }) => {
             dispatch({ type: ERROR, payload: { message: err.message}})
         }
       }
+
+      const removeTodo = async (id: number) => {
+        try {
+          await deleteTodo(id)
+          dispatch({ type: DELETE_TODO, payload: { id} })
+        } catch(err) {
+          dispatch({ type: ERROR, payload: { message: err.message }})
+        }
+      }
     
     return (
-        <TodoDispatchContext.Provider value={{ addNote, toggleImportant, toggleMyDayTodo, todoTitleEdit, addTodo }}>
+        <TodoDispatchContext.Provider value={{ addNote, removeTodo, toggleImportant, toggleMyDayTodo, todoTitleEdit, addTodo }}>
         <TodoStateContext.Provider value={todos}>
           {children}
         </TodoStateContext.Provider>
