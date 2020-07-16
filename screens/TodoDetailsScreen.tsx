@@ -19,6 +19,9 @@ import {
 
 import { TodoDetailsProp } from "../navigation/TodoNavigation";
 import { useDispatchTodos, useTodos } from '../providers/Todo'
+import { dueDateActions, remindMeActions, repeatActions } from '../utils/days';
+import { repeatOptions } from '../utils/notification';
+import TimeTask from '../components/TimeTask'
 
 function TodoDetailsScreen({ route, navigation }: TodoDetailsProp) {
   const dispatchTodo = useDispatchTodos()
@@ -35,11 +38,30 @@ function TodoDetailsScreen({ route, navigation }: TodoDetailsProp) {
   const [todoTitle, setTodoTitle] = useState(foundTodo?.title);
   const [note, setNote] = useState(foundTodo?.note)
   const [step, setStep] = useState("")
+  const [showDueDate, setShowDueDate] = useState(false);
+  const [showReminder, setShowReminder] = useState(false);
+  const [showRepeat, setShowRepeat] = useState(false);
+  const [ dueDate, setDueDate] = useState<Date | undefined>();
+  const [reminderDate, setReminderDate] = useState<Date | undefined>()
+  const [ repeatType, setRepeatType] = useState<repeatOptions>();
 
   const handleTitleChange = (text: string) => {
     setTodoTitle(text);
     dispatchTodo!.todoTitleEdit(id, text);
   };
+
+  const dueDateHandler = (date: Date | string) => {
+    // setDueDate(date as Date);
+    console.log(date as Date)
+  };
+  
+  const addReminderDate = (date: Date | string) => {
+		setReminderDate(date as Date);
+  }
+  
+  const addRepeatHandler = (repeatType: string | Date ) => {
+		console.log(repeatType as repeatOptions);
+	}
 
   const handleNoteChange = (text: string) => {
     setNote(text);
@@ -124,20 +146,38 @@ function TodoDetailsScreen({ route, navigation }: TodoDetailsProp) {
           <View style={styles.timeItem}>
             <AntDesign name="bells" size={24} color="black" />
             <View style={styles.timeItemText}>
-              <Text> Remind me </Text>
+              <Text onPress={() => setShowReminder(prev => !prev)}> Remind me </Text>
             </View>
+            <TimeTask
+					    show={showReminder}
+					    close={() => setShowReminder(false)}
+					    getDateHandler={addReminderDate}
+					    actions={remindMeActions(new Date().getDay())}
+				    />
           </View>
           <View style={styles.timeItem}>
             <AntDesign name="calendar" size={24} color="black" />
             <View style={styles.timeItemText}>
-              <Text> Add due date </Text>
+              <Text onPress={() => setShowDueDate(prev => !prev)}> Add due date </Text>
             </View>
+            <TimeTask
+					    show={showDueDate}
+					    close={() => setShowDueDate(false)}
+					    getDateHandler={dueDateHandler}
+					    actions={dueDateActions(new Date().getDay())}
+				    />
           </View>
           <View style={styles.timeItem}>
             <Entypo name="loop" size={24} color="black" />
             <View style={styles.timeItemText}>
-              <Text> Repeat </Text>
+              <Text onPress={() => setShowRepeat(prev => !prev)} > Repeat </Text>
             </View>
+            <TimeTask
+					    show={showRepeat}
+					    close={() => setShowRepeat(false)}
+					    getDateHandler={addRepeatHandler}
+					    actions={repeatActions()}
+				    />
           </View>
         </View>
         <View style={styles.addToDay}>
@@ -231,6 +271,7 @@ const styles = StyleSheet.create({
     padding: 15,
     elevation: 2,
     margin: 5,
+    zIndex: -20
   },
   addToDayText: {
     color: "#2c2f33",
@@ -244,6 +285,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     margin: 5,
     backgroundColor: "white",
+    zIndex: 1,
   },
   timeItem: {
     flexDirection: "row",
@@ -258,6 +300,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#2c2f33",
     width: "85%",
     color: "#524e5c",
+    zIndex: -20
   },
   noteContainer: {
     height: 120,
@@ -266,6 +309,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     margin: 5,
     justifyContent: "flex-start",
+    zIndex: -20
   },
   noteText: {
     margin: 0,

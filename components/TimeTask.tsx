@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet, Platform, View } from 'react-native';
 
 import  DateTimePicker  from '@react-native-community/datetimepicker'
 
@@ -34,7 +34,7 @@ const TimeTask: React.FC<args> = ({ show, actions, getDateHandler, close }) => {
         return null;
     }
     return (
-		<>
+		<View style={styles.container}>
 		{showDatePicker && (
 			<DateTimePicker
 				testID="dateTimePicker"
@@ -53,7 +53,7 @@ const TimeTask: React.FC<args> = ({ show, actions, getDateHandler, close }) => {
 					title={ action.date  }
 					iconName={action.icon}
 					iconSize={15}
-					iconColor="#ccc"
+					iconColor="black"
 					onPress={() => {
 						if(action.date === 'Pick a date') {
 							setShowDatePicker(true)
@@ -94,11 +94,23 @@ const TimeTask: React.FC<args> = ({ show, actions, getDateHandler, close }) => {
 				))
 			}
         </TodoDatesActions>
-		</>
+		</View>
     )
 }
 
 const styles = StyleSheet.create({
+	container: {
+		position: "absolute",
+		top: 30, 
+		left: 40,
+		zIndex: 1000,
+		elevation: 10,
+		backgroundColor: "white",
+        shadowOffset: { width: 2, height: 2},
+		shadowColor: "rgba(0,0,0,.26)",
+		shadowRadius: 2,
+		shadowOpacity: 1
+	},
 	actionsList: {
 		alignItems: 'flex-start'
 	}

@@ -13,7 +13,6 @@ const useAddTodo = () => {
 	const [showReminder, setShowReminder] = useState(false);
 	const [showRepeat, setShowRepeat] = useState(false);
 
-
 	const taskInputHandler = (text: string) => {
 		setTask(text);
 	};
